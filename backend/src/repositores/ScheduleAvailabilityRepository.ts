@@ -7,7 +7,7 @@ export interface ScheduleAvailabilityWhereParams {
         
     }
     userId?: number
-    isAvailable: boolean
+    isAvailable?: boolean
 }
 
 export interface FindScheduleAvailabilityParams {

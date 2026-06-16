@@ -25,7 +25,7 @@ export interface CreatePatientAttributes {
 }
 export interface PatientRepository {
     find: (params: FindPatientsParams) => Promise<Patient[]>
-    findById: (id: number) => Promise<Patient | null>
+    findById: (patientId: number) => Promise<Patient | null>
     create: (attributes: CreatePatientAttributes) => Promise<Patient>
     update: (id: number, attributes: Partial<CreatePatientAttributes>) => Promise<Patient | null>
     delete: (id: number) => Promise<Patient>

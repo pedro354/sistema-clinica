@@ -4,7 +4,7 @@ export type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED"
 
 export interface AppointmentWhereParams {
     date?: {
-        gte?: Date
+        gte?: Date 
         lte?: Date
     }
     patientId?: number
@@ -22,7 +22,9 @@ export interface FindAppointmentsParams {
     }
 }
 
+
 export interface CreateAppointmentAttributes {
+    id: number
     date: Date
     status: AppointmentStatus
     description?: string
@@ -33,6 +35,7 @@ export interface CreateAppointmentAttributes {
 export interface AppointmentRepository {
     find: (params: FindAppointmentsParams ) => Promise<Appointment[]>
     findById: (id: number) => Promise<Appointment | null>
+    findByAppointment: (id: number) => Promise<Appointment[]>
     create: (attributes: CreateAppointmentAttributes) => Promise<Appointment>
     update: (id: number, attributes: Partial<CreateAppointmentAttributes>) => Promise<Appointment | null>
     delete: (id: number) => Promise<Appointment>

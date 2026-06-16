@@ -8,7 +8,7 @@ export class UserService {
     const user = await this.userRepository.findById(id);
     // Lembrete: Criar pagina de erro para por o 404 aqui
     if (!user) throw new Error('User not exists!');
-    return user;
+    return user; 
   }
   async createUser(params: CreateUserAttributes) {
     if (!params.name?.trim()) throw new Error('Name is required!');

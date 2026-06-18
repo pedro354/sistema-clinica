@@ -4,7 +4,6 @@ export interface ScheduleAvailabilityWhereParams {
     dateRange?: {
         startDate: Date
         endDate: Date
-        
     }
     userId?: number
     isAvailable?: boolean

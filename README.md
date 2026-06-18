@@ -1,34 +1,83 @@
-# 🧠 Clinic System
+# 🧠 Sistema de Gestão para Clínicas Psicológicas
 
-Sistema SaaS para gerenciamento de clínica psicológica, desenvolvido com foco em arquitetura fullstack moderna, autenticação segura e escalabilidade.
+Sistema fullstack desenvolvido para gerenciamento de clínicas psicológicas, permitindo o controle de pacientes, psicólogos, consultas e agenda de atendimentos.
+
+O objetivo do projeto é aplicar conceitos de Engenharia de Software, desenvolvimento Back-End, modelagem de banco de dados e arquitetura de aplicações modernas.
 
 ---
 
-## 🚀 Tecnologias
+## 🎯 Objetivos do Projeto
+
+* Gerenciar pacientes e profissionais da clínica
+* Controlar agendamentos de consultas
+* Evitar conflitos de horários
+* Centralizar informações clínicas
+* Aplicar boas práticas de arquitetura e desenvolvimento
+
+---
+
+## 🚀 Tecnologias Utilizadas
 
 ### Frontend
-- React
-- TypeScript
-- Vite
-- React Router DOM
-- Axios
-- Tailwind CSS
+
+* React
+* TypeScript
+* Vite
+* React Router DOM
+* Axios
+* Tailwind CSS
 
 ### Backend
-- Node.js
-- Express
-- TypeScript
-- Prisma ORM
-- PostgreSQL
+
+* Node.js
+* Express
+* TypeScript
+* Prisma ORM
+* PostgreSQL
 
 ### Ferramentas
-- ESLint
-- Prettier
-- Dotenv
+
+* ESLint
+* Prettier
+* Dotenv
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📋 Funcionalidades
+
+### Implementadas
+
+* Estrutura Fullstack React + Node.js
+* Integração Frontend ↔ Backend
+* Configuração Prisma ORM
+* Banco de dados PostgreSQL
+* Organização de rotas
+* Padronização de código com ESLint e Prettier
+
+### Em Desenvolvimento
+
+* Autenticação JWT
+* Controle de acesso
+* Cadastro de pacientes
+* Cadastro de psicólogos
+* Agendamento de consultas
+* Remarcação de consultas
+* Cancelamento de consultas
+* Dashboard administrativo
+* Calendário de atendimentos
+
+### Planejadas
+
+* Upload de documentos
+* Testes automatizados
+* Docker
+* Logs da aplicação
+* Sistema de notificações
+* Relatórios gerenciais
+
+---
+
+## 🏗️ Estrutura do Projeto
 
 ```bash
 clinic-system/
@@ -40,54 +89,33 @@ clinic-system/
 
 ---
 
-## ⚙️ Configuração do Projeto
+## 📚 Regras de Negócio
 
-### Clone o repositório
+O sistema está sendo desenvolvido considerando cenários reais de clínicas psicológicas.
 
-```bash
-git clone <repo-url>
-```
+Exemplos:
+
+* Um psicólogo não pode possuir duas consultas no mesmo horário.
+* Consultas podem ser canceladas ou remarcadas.
+* Pacientes possuem histórico de atendimentos.
+* A agenda deve impedir conflitos de horários.
 
 ---
 
-# 🔧 Backend
+## ⚙️ Como Executar
 
-## Instalar dependências
+### Backend
 
 ```bash
 cd backend
 npm install
-```
 
----
-
-## Configurar variáveis de ambiente
-
-Crie um arquivo `.env`:
-
-```env
-DATABASE_URL=
-JWT_SECRET=
-PORT=3000
-```
-
----
-
-## Rodar migrations Prisma
-
-```bash
 npx prisma migrate dev
-```
 
----
-
-## Rodar servidor backend
-
-```bash
 npm run dev
 ```
 
-Servidor disponível em:
+Servidor:
 
 ```bash
 http://localhost:3000
@@ -95,24 +123,16 @@ http://localhost:3000
 
 ---
 
-# 🎨 Frontend
-
-## Instalar dependências
+### Frontend
 
 ```bash
 cd frontend
 npm install
-```
 
----
-
-## Rodar frontend
-
-```bash
 npm run dev
 ```
 
-Frontend disponível em:
+Frontend:
 
 ```bash
 http://localhost:5173
@@ -120,58 +140,29 @@ http://localhost:5173
 
 ---
 
-# 🔄 Fluxo Frontend ↔ Backend
+## 📈 Objetivo de Aprendizado
 
-O frontend utiliza Axios para comunicação com a API Express.
+Este projeto é utilizado como laboratório prático para estudo de:
 
-Exemplo:
-
-```ts
-await api.login({
-  email,
-  password,
-});
-```
-
----
-
-# 📌 Roadmap
-
-## ✅ Setup inicial
-- [x] React + Vite
-- [x] Express + TypeScript
-- [x] Prisma ORM
-- [x] PostgreSQL
-- [x] ESLint + Prettier
-- [x] React Router
-- [x] Axios
-- [x] Mock de autenticação
+* Engenharia de Software
+* Arquitetura Backend
+* TypeScript
+* PostgreSQL
+* Prisma ORM
+* Autenticação e Segurança
+* Testes Automatizados
+* Docker
+* Inteligência Artificial aplicada a sistemas web
 
 ---
 
-## 🚧 Próximas funcionalidades
-- [ ] JWT Authentication
-- [ ] Protected Routes
-- [ ] Cadastro de pacientes
-- [ ] Sistema de consultas
-- [ ] Dashboard
-- [ ] Calendário
-- [ ] Upload de documentos
-- [ ] Responsividade avançada
-
----
-
-# 🧪 Status Atual
-
-Projeto em desenvolvimento ativo.
-
-Atualmente focado na construção da arquitetura base fullstack, autenticação e integração frontend/backend.
-
----
-
-# 👨‍💻 Autor
+## 👨‍💻 Autor
 
 Pedro Silva
 
-🔗 LinkedIn:
+Estudante de Engenharia de Software
+
+Foco em Back-End, Arquitetura de Software e Inteligência Artificial.
+
+LinkedIn:
 https://www.linkedin.com/in/pedro-silva-576327125

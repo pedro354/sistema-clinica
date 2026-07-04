@@ -7,6 +7,7 @@ export interface AppointmentWhereParams {
         gte?: Date 
         lte?: Date
     }
+    userId?: number
     patientId?: number
     status?: AppointmentStatus
 }
@@ -29,6 +30,7 @@ export interface CreateAppointmentAttributes {
     status: AppointmentStatus
     description?: string
     patientId: number
+    userId: number
 }
 
 

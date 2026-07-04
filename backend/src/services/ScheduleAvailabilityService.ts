@@ -101,12 +101,38 @@ export class ScheduleAvailability {
         });
 
         if(conflits.length > 0){
-            console.log("Disponibilidade de horario não permitida");
-        }
+            throw new Error("Não pode haver conflito de horário com outras disponibilidades")}
+        
         
         if(schedAvail) return true
 
+        return await this.scheduleAvailabilityRepository.create(params)
 
-}
+        }
+        async updateScheduleAvailability(id: number, attributes: Partial<CreateScheduleAvailabilityAttributes>){
+        const scheduleAvailability = await this.scheduleAvailabilityRepository.findById(id)
+        if(!scheduleAvailability) throw new Error("Disponibilidade de horário não encontrada!")
+        const appointments = await this.appointmentRepository.find({where: {userId: scheduleAvailability.userId, date: {
+            gte: attributes.startDate,
+            lte: attributes.endDate
+        }}})
+        //disponibilidade de horário não pode ser alterada se houver uma consulta agendada nesse período
+        if(appointments.length > 0) throw new Error("Não é possível alterar a disponibilidade de horário, pois há consultas agendadas nesse período.")
+
+        //se alterou o horario, verificar se há conflito com outras disponibilidades
+        if(attributes.startDate && attributes.endDate){
+            const schedules = await this.scheduleAvailabilityRepository.find({})
+            for (const sched of schedules) {
+                if(sched.id !== id){
+                    const beforeEnd = attributes.startDate < sched.endDate
+                    const afterStart = attributes.endDate > sched.startDate
+                    if(beforeEnd && afterStart){
+                        throw new Error("Não é possível alterar a disponibilidade de horário, pois há conflito com outra disponibilidade.")
+                    }
+        }
+    }
+        }
+        return await this.scheduleAvailabilityRepository.update(id, attributes)
+    }
 
 }

@@ -94,7 +94,7 @@ export class AppointmentService {
   ) {
     const appointment = await this.appointmentRepository.findById(id);
     if (!appointment) throw new Error('Appointment not found!');
-    const appointments = await this.appointmentRepository.find({});
+    const appointments = await this.appointmentRepository.find({where: {date: {gte: appointment.date, lte: appointment.date}}});
 
     const consultas = appointments;
 
@@ -121,8 +121,7 @@ Uma consulta cancelada não pode voltar para concluida
       throw new Error('Consulta concluída não pode ser cancelada!');
     }
 
-    console.log("Status atualizado");
-    
+                        return await this.appointmentRepository.update(id, params)
   }
   async deleteAppointment(id:number){
     const appoitmentExists = await this.appointmentRepository.findById(id)

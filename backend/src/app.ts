@@ -10,9 +10,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
+console.log("APP NOVO");
 app.use(express.json());
-
+console.log(apiRouter);
 app.use('/api', apiRouter)
 
 module.exports = app;

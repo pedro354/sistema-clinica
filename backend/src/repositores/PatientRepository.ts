@@ -9,7 +9,7 @@ export interface PatientWhereParams {
 }
 export interface FindPatientsParams {
     where?: PatientWhereParams
-    sortBy?: "name" | "phone"
+    sortBy?: "name" | "phone" | "createdAt"
     order?: "asc" | "desc"
     offset?: number
     limit?: number

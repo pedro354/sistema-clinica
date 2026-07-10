@@ -10,7 +10,8 @@ async function main(){
         update: {
             scheduleAvailabilities: {
                 create: [{
-                    date: new Date("2024-07-01T09:00:00Z"),
+                    startDate: new Date("2024-07-01T09:00:00Z"),
+                    endDate: new Date("2024-07-01T17:00:00Z"),
                     isAvailable: true
                 }]
             }

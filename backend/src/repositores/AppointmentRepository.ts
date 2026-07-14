@@ -1,12 +1,12 @@
 import { Appointment } from "../../generated/prisma/client";
 
 export type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED"
-
+export interface DateRange {
+    startDate: Date;
+    endDate: Date;
+}
 export interface AppointmentWhereParams {
-    date?: {
-        gte?: Date 
-        lte?: Date
-    }
+    date?: DateRange
     userId?: number
     patientId?: number
     status?: AppointmentStatus
@@ -25,9 +25,8 @@ export interface FindAppointmentsParams {
 
 
 export interface CreateAppointmentAttributes {
-    id: number
     date: Date
-    status: AppointmentStatus
+    status?: AppointmentStatus
     description?: string
     patientId: number
     userId: number

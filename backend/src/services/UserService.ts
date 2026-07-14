@@ -4,6 +4,10 @@ import {
 } from './../repositores/UserRepository';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
+  async getUser(){
+    const user = await this.userRepository.find();
+    return user
+  }
   async getUserById(id: number) {
     const user = await this.userRepository.findById(id);
     // Lembrete: Criar pagina de erro para por o 404 aqui

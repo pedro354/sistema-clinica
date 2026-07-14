@@ -6,10 +6,10 @@ export class PrismaScheduleAvailability implements ScheduleAvailabilityRepositor
     async find(params: FindScheduleAvailabilityParams): Promise<ScheduleAvailability[]>{
         const where: Prisma.ScheduleAvailabilityWhereInput = {
             startDate: {
-                gte: params.where?.dateRange?.startDate,
+                gte: params.where?.date?.startDate,
             },
             endDate: {
-                lte: params.where?.dateRange?.endDate
+                lte: params.where?.date?.endDate
             },
             userId: params.where?.userId,
             isAvailable: params.where?.isAvailable

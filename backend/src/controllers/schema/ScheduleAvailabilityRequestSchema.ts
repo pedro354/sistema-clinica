@@ -14,7 +14,7 @@ export const UpdateScheduleAvailabilityRequestSchema = CreateScheduleAvailabilit
 
 export const GetScheduleAvailabilityRequestSchema = z.object({
     userId: idSchema.optional(),
-        startDate: z.coerce.date().optional(),
-        endDate: z.coerce.date().optional(),
+        startDate: z.coerce.date(),
+        endDate: z.coerce.date(),
     isAvailable: z.boolean().optional()
 })

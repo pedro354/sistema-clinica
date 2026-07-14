@@ -31,7 +31,8 @@ import {
 import { PatientRepository } from '../repositores/PatientRepository';
 
 export interface GetAppointmentParams {
-  date: Date;
+  startDate: Date;
+  endDate: Date;
   status?: AppointmentStatus;
   sortBy?: 'date' | 'status';
   order?: 'asc' | 'desc';
@@ -43,15 +44,16 @@ export class AppointmentService {
     private readonly patientRepository: PatientRepository,
   ) {}
   async getAppointmentFind(params: GetAppointmentParams) {
-    const { date, status, sortBy, order } = params;
+    const { startDate, endDate, status, sortBy, order } = params;
 
     const where: AppointmentWhereParams = {};
-    const startDate = new Date(date);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(date);
-    endDate.setHours(23, 59, 59, 999);
-
-    if (date) where.date = { gte: startDate, lte: endDate };
+    const queryStartDate = new Date(startDate);
+    queryStartDate.setHours(0, 0, 0, 0);
+    const queryEndDate = new Date(endDate);
+    queryEndDate.setHours(23, 59, 59, 999);
+    
+    where.date = { startDate: queryStartDate, endDate: queryEndDate };
+    
     if (status) where.status = status;
 
     const appointment = await this.appointmentRepository.find({
@@ -78,8 +80,8 @@ export class AppointmentService {
       where: {
         patientId: params.patientId,
         date: {
-          gte: params.date,
-          lte: params.date,
+          startDate: params.date,
+          endDate: params.date,
         },
       },
     });
@@ -94,13 +96,13 @@ export class AppointmentService {
   ) {
     const appointment = await this.appointmentRepository.findById(id);
     if (!appointment) throw new Error('Appointment not found!');
-    const appointments = await this.appointmentRepository.find({where: {date: {gte: appointment.date, lte: appointment.date}}});
+    const appointments = await this.appointmentRepository.find({where: {date: {startDate: appointment.date, endDate: appointment.date}}});
 
     const consultas = appointments;
 
     const conflitos = consultas.filter((consulta) => {
       const nowDate = consulta.date === params.date;
-      const otherAppointment = consulta.id !== params.id;
+      const otherAppointment = consulta.id !== params.patientId;
       return nowDate && otherAppointment;
     });
     if (conflitos.length > 0) {

@@ -8,17 +8,28 @@ import {
 
 export class PrismaAppoitmentRepository implements AppointmentRepository {
   async find(params: FindAppointmentsParams): Promise<Appointment[]> {
-    const where: Prisma.AppointmentWhereInput = {
-      date: {
-        gte: params.where?.date?.gte,
-        lte: params.where?.date?.lte,
-      },
-      patientId: params.where?.patientId,
-      status: params.where?.status,
-    };
+    const where: Prisma.AppointmentWhereInput = {};
+
+    if (params.where?.date) {
+      where.date = {
+        gte: params.where.date.startDate,
+        lte: params.where.date.endDate,
+      };
+    }
+
+    if (params.where?.patientId) {
+      where.patientId = params.where.patientId;
+    }
+
+    if (params.where?.status) {
+      where.status = params.where.status;
+    }
+
     return prisma.appointment.findMany({
       where,
-      orderBy: { [params.sortBy ?? 'date']: params.order },
+      orderBy: {
+        [params.sortBy ?? 'date']: params.order ?? 'asc',
+      },
       skip: params.offset,
       take: params.limit,
       include: {

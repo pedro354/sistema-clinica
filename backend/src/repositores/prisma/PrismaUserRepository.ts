@@ -3,6 +3,9 @@ import { CreateUserAttributes, UserRepository } from '../UserRepository';
 import { prisma } from './../../../prisma/lib/prisma';
 
 export class PrismaUserRepository implements UserRepository {
+    async find(): Promise<User[]>{
+        return prisma.user.findMany()
+    }
     async findById(id: number): Promise<User | null> {
         return prisma.user.findUnique({
             where: { id }

@@ -6,6 +6,7 @@ export interface CreateUserAttributes {
     password: string
 }
 export interface UserRepository {
+    find: () => Promise<User[]>
     findById: (id: number) => Promise<User | null>
     findByEmail: (email: string) => Promise<User | null>
     create: (attributes: CreateUserAttributes) => Promise<User>

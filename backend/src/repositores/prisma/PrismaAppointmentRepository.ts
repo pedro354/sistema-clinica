@@ -17,7 +17,7 @@ export class PrismaAppoitmentRepository implements AppointmentRepository {
       };
     }
 
-    if (params.where?.patientId) {
+    if (params.where?.patientId !== undefined) {
       where.patientId = params.where.patientId;
     }
 
@@ -54,7 +54,7 @@ export class PrismaAppoitmentRepository implements AppointmentRepository {
   ): Promise<Appointment> {
     return prisma.appointment.update({
       where: { id },
-      data: attributes as Prisma.AppointmentUpdateInput,
+      data: attributes,
     });
   }
   async delete(id: number): Promise<Appointment> {

@@ -1,17 +1,14 @@
 import { Appointment } from "../../generated/prisma/client";
+import { DateRange } from "../types/DateRange";
 
 export type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED"
-export interface DateRange {
-    startDate: Date;
-    endDate: Date;
-}
+
 export interface AppointmentWhereParams {
     date?: DateRange
     userId?: number
     patientId?: number
     status?: AppointmentStatus
 }
-
 export interface FindAppointmentsParams {
     where?: AppointmentWhereParams
     sortBy?: "date" | "status"
@@ -22,8 +19,6 @@ export interface FindAppointmentsParams {
         patient?: boolean
     }
 }
-
-
 export interface CreateAppointmentAttributes {
     date: Date
     status?: AppointmentStatus
@@ -31,8 +26,6 @@ export interface CreateAppointmentAttributes {
     patientId: number
     userId: number
 }
-
-
 export interface AppointmentRepository {
     find: (params: FindAppointmentsParams ) => Promise<Appointment[]>
     findById: (id: number) => Promise<Appointment | null>

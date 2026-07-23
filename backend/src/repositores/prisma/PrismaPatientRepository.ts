@@ -4,17 +4,23 @@ import { CreatePatientAttributes, FindPatientsParams, PatientRepository } from "
 
 export class PrismaPatientRepository implements PatientRepository {
     async find(params: FindPatientsParams): Promise<Patient[]> {
-        const where: Prisma.PatientWhereInput = {
-            name: {
+        const where: Prisma.PatientWhereInput = {}
+
+        if(params.where?.name){
+            where.name = {
                 contains: params.where?.name?.like,
                 equals: params.where?.name?.equals,
                 mode: params.where?.name?.mode
-            },
-            userId: params.where?.userId
+            }
         }
+
+        if(params.where?.userId !== undefined){
+            where.userId = params.where?.userId
+        }
+
         return prisma.patient.findMany({
             where,
-            orderBy: { name: params.order },
+            orderBy: { [params.sortBy ?? 'name']: params.order ?? "asc" },
             skip: params.offset,
             take: params.limit,
             include: {

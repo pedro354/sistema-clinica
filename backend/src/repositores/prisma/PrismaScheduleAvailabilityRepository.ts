@@ -2,18 +2,25 @@ import { Prisma, ScheduleAvailability } from "../../../generated/prisma/client";
 import { prisma } from "../../../prisma/lib/prisma";
 import { CreateScheduleAvailabilityAttributes, FindScheduleAvailabilityParams, ScheduleAvailabilityRepository } from "../ScheduleAvailabilityRepository";
 
-export class PrismaScheduleAvailability implements ScheduleAvailabilityRepository {
+export class PrismaScheduleAvailabilityRepository implements ScheduleAvailabilityRepository {
     async find(params: FindScheduleAvailabilityParams): Promise<ScheduleAvailability[]>{
-        const where: Prisma.ScheduleAvailabilityWhereInput = {
-            startDate: {
+        const where: Prisma.ScheduleAvailabilityWhereInput = {}
+
+        if (params.where?.date) {
+            where.startDate = {
                 gte: params.where?.date?.startDate,
-            },
-            endDate: {
+            }
+            where.endDate = {
                 lte: params.where?.date?.endDate
-            },
-            userId: params.where?.userId,
-            isAvailable: params.where?.isAvailable
+            }
         }
+        if (params.where?.userId !== undefined) {
+            where.userId = params.where?.userId
+        }
+        if (params.where?.isAvailable !== undefined) {
+            where.isAvailable = params.where?.isAvailable
+        }
+
         return prisma.scheduleAvailability.findMany({
             where,
             include: {

@@ -1,9 +1,5 @@
 import { ScheduleAvailability } from "../../generated/prisma/client"
-
-export interface DateRange {
-        startDate: Date
-        endDate: Date
-}
+import { DateRange } from "../types/DateRange"
 
 export interface ScheduleAvailabilityWhereParams {
     date?: DateRange

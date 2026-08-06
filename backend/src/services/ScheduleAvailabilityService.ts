@@ -5,6 +5,9 @@ import {
 } from './../repositores/ScheduleAvailabilityRepository';
 import { AppointmentRepository } from '../repositores/AppointmentRepository';
 import { ScheduleAvailabilityRepository } from '../repositores/ScheduleAvailabilityRepository';
+import { NotFoundError } from '../errors/NotFoundErros';
+import { ValidationError } from '../errors/ValidationError';
+import { ConflictError } from '../errors/ConflictError';
 
 export interface GetScheduleAvailabilityParams {
   startDate: Date;
@@ -42,7 +45,7 @@ export class ScheduleAvailabilityService {
   async getScheduleAvailabilityFindById(id: number) {
     const schedules = await this.scheduleAvailabilityRepository.findById(id);
     if (!schedules)
-      throw new Error('disponibilidade de horário não encontrada!');
+      throw new NotFoundError('Schedule availability not found!');
     return schedules;
   }
   async createScheduleAvailability(params: CreateScheduleAvailabilityAttributes) {
@@ -77,8 +80,8 @@ export class ScheduleAvailabilityService {
           const beforeEnd = newStartDate < schedule.endDate;
           const afterStart = newEndDate > schedule.startDate;
           if (beforeEnd && afterStart) {
-            throw new Error(
-              'Não é possível alterar a disponibilidade de horário, pois há conflito com outra disponibilidade.',
+            throw new ValidationError(
+              'It is not possible to change the schedule availability, as there is a conflict with another availability.',
             );
           }
         }
@@ -89,14 +92,14 @@ export class ScheduleAvailabilityService {
   }
   private async validateUser(userId: number){
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new Error('usuario associado não encontrado!');
+    if (!user) throw new NotFoundError('Associated user not found!');
   }
   private async validateDateRange(startDate: Date, endDate: Date){
-    if (!startDate) throw new Error('Data inicial obrigatoria');
-    if (!endDate) throw new Error('Data final obrigatoria');
+    if (!startDate) throw new NotFoundError('Mandatory start date');
+    if (!endDate) throw new NotFoundError('Mandatory end date');
 
     if (startDate > endDate)
-      throw new Error('A data inciial não pode ser maior que data final');
+      throw new NotFoundError('The start date cannot be later than the end date.');
   }
   private async ensureNoDuplicated(startDate: Date, endDate: Date){
     const duplicated = await this.scheduleAvailabilityRepository.find({
@@ -107,7 +110,7 @@ export class ScheduleAvailabilityService {
         },
       },
     });
-    if (duplicated.length > 0) throw new Error('Não pode duplicar');
+    if (duplicated.length > 0) throw new ConflictError('Cannot be duplicated');
 
   }
   private async ensureNoConflict(startDate: Date, endDate: Date){
@@ -119,14 +122,14 @@ export class ScheduleAvailabilityService {
     });
 
     if (conflicts.length > 0) {
-      throw new Error(
-        'Não pode haver conflito de horário com outras disponibilidades',
+      throw new ConflictError(
+        'There can be no scheduling conflicts with other availability.',
       );
     }
   }
   private async getScheduleOrThrow(id: number){
     const schedule  = await this.scheduleAvailabilityRepository.findById(id);
-    if (!schedule ) throw new Error('Disponibilidade de horário não encontrada!');
+    if (!schedule ) throw new NotFoundError('Schedule availability not found!');
     return schedule
   }
   private async ensureNoAppointments(userId: number, startDate: Date, endDate: Date){
@@ -140,38 +143,9 @@ export class ScheduleAvailabilityService {
       },
     });
     if (appointments.length > 0)
-      throw new Error(
-        'Não é possível alterar a disponibilidade de horário, pois há consultas agendadas nesse período.',
+      throw new NotFoundError(
+        'It is not possible to change the schedule availability, as there are appointments booked during that time.',
       );
   }
 
 }
-
-/* REGRA DE NEGOCIO */
-/* 
-Regra do find:
-Permirtir buscas disponiblidades usando filtros
-Permitir filtrar por periodo(start e end)
-permitir filtrar por ususario associado
-Permitir incluir os dados do usuario associado
---------------------------------------------------------------------------------
-Regra do findById: 
-Validar disponibilidade se não existir retornar que não encontrou
-
---------------------------------------------------------------------------------
-Regra create: 
-A data inicial é obrigatória.
-A data final é obrigatória.
-O usuário associado deve existir.
-Não permitir disponibilidades duplicadas.
-Não permitir disponibilidades conflitantes no mesmo período.
-Verificar se o período informado é válido.--------------------------------------------------------------------------------
-Regra do update:
-1. A disponibilidade deve existir.
-
-2. O novo período deve ser válido.
-
-3. Não pode haver consultas marcadas nesse período.
-
-4. Não pode conflitar com outra disponibilidade.
-*/

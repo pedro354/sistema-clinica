@@ -1,3 +1,5 @@
+import { NotFoundError } from '../errors/NotFoundErros';
+import { ValidationError } from '../errors/ValidationError';
 import { AppointmentRepository } from '../repositores/AppointmentRepository';
 import {
   CreatePatientAttributes,
@@ -5,6 +7,7 @@ import {
   PatientRepository,
 } from '../repositores/PatientRepository';
 import { UserRepository } from '../repositores/UserRepository';
+import { PHONE_REGEX } from '../utils/regex';
 
 export class PatientService {
   constructor(
@@ -62,29 +65,28 @@ export class PatientService {
     const appointment = await this.appointmentRepository.find({ where: { patientId: id } });
 
     if (appointment.length > 0)
-      throw new Error('Não é possível deletar paciente com consultas');
+      throw new Error('It is not possible to delete a patient with appointments.');
 
     return await this.patientRepository.delete(patient.id);
   }
 
   private async getPatientOrThrow(id: number){
     const patient = await this.patientRepository.findById(id);
-    if (!patient) throw new Error('Pacient not found!');
+    if (!patient) throw new ValidationError('Pacient not found!');
     return patient;
   }
   private async validateName(name: string){
-    if (!name?.trim()) throw new Error('Name is required');
+    if (!name?.trim()) throw new ValidationError('Name is required');
   }
   private async validateUser(userId: number){
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new Error('User not found! ');
+    if (!user) throw new ValidationError('User not found! ');
     return user
   }
   private async validatePhone(phone:string){
     if (!phone?.trim()) throw new Error('Phone is required');
-    const regexPhone = /^\d{2}9\d{8}$/;
-    if (!regexPhone.test(phone))
-      throw new Error('Invalid Phone, please to type (00) 99999-9999 ');
+    if (!PHONE_REGEX.test(phone))
+      throw new NotFoundError('Invalid phone number. Use the format (00) 99999-9999.');
   }
 
 }

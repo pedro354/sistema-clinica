@@ -1,4 +1,7 @@
 import { AppointmentStatus } from '../../generated/prisma/enums';
+import { ConflictError } from '../errors/ConflictError';
+import { NotFoundError } from '../errors/NotFoundErros';
+import { ValidationError } from '../errors/ValidationError';
 import {
   AppointmentRepository,
   AppointmentWhereParams,
@@ -30,7 +33,8 @@ export class AppointmentService {
     queryEndDate.setHours(23, 59, 59, 999);
 
     where.date = { startDate: queryStartDate, endDate: queryEndDate };
-
+    console.log("User:", where.userId);
+console.log("Local:", params.startDate.toLocaleString("pt-BR"));
     if (status) where.status = status;
 
     const appointment = await this.appointmentRepository.find({
@@ -50,25 +54,25 @@ export class AppointmentService {
     await this.validatePatient(params.patientId);
 
     this.validateAppointmentDate(params.date);
-
+    
     await this.ensureNoDuplicate(params.patientId, params.date, params.date);
-
+        
     return this.appointmentRepository.create(params);
   }
-
+  
   async updateAppointment(id: number,params: Partial<CreateAppointmentAttributes>) {
     const currentAppointment = await this.getAppointmentOrThrow(id);
-
+    
     const newDate = params.date ?? currentAppointment.date;
 
     this.validateAppointmentDate(newDate);
 
     const nextStatus = params.status ?? currentAppointment.status;
-
+    
     await this.validateStatusTransition(currentAppointment.status, nextStatus);
-
+    
     await this.ensureNoConflict(id, newDate);
-
+    
     return await this.appointmentRepository.update(id, params);
   }
   // Private Helpers
@@ -78,15 +82,15 @@ export class AppointmentService {
   }
   private async getAppointmentOrThrow(id: number) {
     const appointment = await this.appointmentRepository.findById(id);
-    if (!appointment) throw new Error('Appointment not found!');
+    if (!appointment) throw new NotFoundError('Appointment not found!');
     return appointment;
   }
   private async validatePatient(patientId: number) {
     const patient = await this.patientRepository.findById(patientId);
-    if (!patient) throw new Error('Patient not found!');
+    if (!patient) throw new NotFoundError('Patient not found!');
   }
   private async validateAppointmentDate(date: Date) {
-    if (!date) throw new Error('Date appointment is required!');
+    if (!date) throw new ValidationError('Date appointment is required!');
   }
   private async ensureNoDuplicate(
     patientId: number,
@@ -103,7 +107,7 @@ export class AppointmentService {
       },
     });
     if (duplicated.length > 0) {
-      throw new Error('Date and patient is have duplicate');
+      throw new ConflictError('An appointment for this patient already exists on the selected date.');
     }
   }
   private async validateStatusTransition(
@@ -120,29 +124,42 @@ export class AppointmentService {
 
     const canChange = statusTransitions[currentStatus].includes(nextStatus);
     if (!canChange) {
-      throw new Error('Transição de status inválida!');
+      throw new ValidationError('Invalid status transition!');
     }
   }
-  private async ensureNoConflict(appointmentId: number, date: Date) {
-    const appointments = await this.appointmentRepository.find({
-      where: {
-        date: {
-          startDate: date,
-          endDate: date,
-        },
-      },
-    });
+private async ensureNoConflict(
+  appointmentId: number,
+  appointmentDate: Date,
+) {
+  const APPOINTMENT_DURATION = 60 * 60 * 1000; // 1 hora
 
-    const haveConflict = appointments.some((appointment) => {
-      if (appointmentId === appointment.id) {
-        return false;
-      }
-    });
-    if (haveConflict) {
-      throw new Error('Já existe uma consulta agendada para esse horário.');
+  const appointments = await this.appointmentRepository.find({
+    where: {},
+  });
+
+  const newStart = appointmentDate.getTime();
+  const newEnd = newStart + APPOINTMENT_DURATION;
+
+  const hasConflict = appointments.some((appointment) => {
+    if (appointment.id === appointmentId) {
+      return false;
     }
+
+    const currentStart = appointment.date.getTime();
+    const currentEnd = currentStart + APPOINTMENT_DURATION;
+
+    return (
+      newStart < currentEnd &&
+      newEnd > currentStart
+    );
+  });
+
+  if (hasConflict) {
+    throw new ConflictError(
+      'There is already an appointment scheduled for this time.',
+    );
   }
-}
+}}
 /* REGRA DE NEGOCIO */
 /* 
 Regra do find:

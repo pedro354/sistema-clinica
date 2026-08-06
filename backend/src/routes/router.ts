@@ -3,6 +3,8 @@ import { appointmentController, patientController, scheduleAvailabilityControlle
 
 
 const router = Router();
+
+
 router.get('/user', userController.index)
 router.post('/user', userController.create)
 router.get('/user/:id', userController.show)

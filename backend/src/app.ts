@@ -1,6 +1,7 @@
-const cors = require('cors');
-const apiRouter = require('./routes/router');
-const express = require('express');
+import cors from 'cors';
+import express from 'express';
+import { errorHandler } from "./middlewares/errorHandler";
+import apiRouter from './routes/router';
 
 const app = express()
 
@@ -12,7 +13,6 @@ app.use(cors({
 }));
 console.log("APP NOVO");
 app.use(express.json());
-console.log(apiRouter);
 app.use('/api', apiRouter)
-
-module.exports = app;
+app.use(errorHandler)
+export default app;

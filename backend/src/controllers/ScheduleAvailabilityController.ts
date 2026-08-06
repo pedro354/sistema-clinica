@@ -1,54 +1,28 @@
 import { Handler } from 'express';
-import { ScheduleAvailability } from '../services/ScheduleAvailabilityService';
 import { CreateScheduleAvailabilityRequestSchema, GetScheduleAvailabilityRequestSchema, UpdateScheduleAvailabilityRequestSchema } from './schema/ScheduleAvailabilityRequestSchema';
+import { ScheduleAvailabilityService } from '../services/ScheduleAvailabilityService';
 
 export class ScheduleAvailabilityController {
-  constructor(private readonly scheduleAvailability: ScheduleAvailability ) {}
-  index: Handler = async (req, res, next) => {
-    try {
+  constructor(private readonly scheduleAvailability: ScheduleAvailabilityService ) {}
+  index: Handler = async (req, res) => {
       const query = GetScheduleAvailabilityRequestSchema.parse(req.query);
       const result = await this.scheduleAvailability.getScheduleAvailabilityFind(query)
-      res.status(200).json(result);
-    } catch (error) {
-      next(error);
-    }
+      return res.status(200).json(result);
   };
-  create: Handler = async (req, res, next) => {
-    try {
+  create: Handler = async (req, res) => {
       const body = CreateScheduleAvailabilityRequestSchema.parse(req.body)
       const newAppointment = await this.scheduleAvailability.createScheduleAvailability(body);
-      res.status(200).json(newAppointment);
-    } catch (error) {
-      next(error);
-    }
+      return res.status(200).json(newAppointment);
   };
-  show: Handler = async (req, res, next) => {
-    try {
+  show: Handler = async (req, res) => {
       const id = +req.params.id;
       const appointment = await this.scheduleAvailability.getScheduleAvailabilityFindById(id);
-      res.status(200).json(appointment);
-    } catch (error) {
-      next(error);
-    }
+      return res.status(200).json(appointment);
   };
-  update: Handler = async (req, res, next) => {
-    try {
+  update: Handler = async (req, res) => {
       const id = +req.params.id;
       const body = UpdateScheduleAvailabilityRequestSchema.parse(req.body);
       const updatedAppointment = await this.scheduleAvailability.updateScheduleAvailability(id, body);
-      res.status(200).json(updatedAppointment);
-    } catch (error) {
-      next(error);
-    }
+      return res.status(200).json(updatedAppointment);
   };
-  //não tem delete
-//   delete: Handler = async (req, res, next) => {
-//     try {
-//       const id = Number(req.params.id);
-//       const deleteAppointment = await this.scheduleAvailability.delete(id);
-//       res.json(deleteAppointment);
-//     } catch (error) {
-//       next(error);
-//     }
-//   };
 }

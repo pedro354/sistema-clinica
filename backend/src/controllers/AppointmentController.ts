@@ -3,51 +3,33 @@ import { CreateAppointmentRequestSchema, GetAppointmentsRequestSchema, UpdateApp
 import { Handler } from 'express';
 
 export class AppoitmentController {
+  
   constructor(private readonly appointmentService: AppointmentService ) {}
-  index: Handler = async (req, res, next) => {
-    try {
-      const query = GetAppointmentsRequestSchema.parse(req.query);
-      const result = await this.appointmentService.getAppointmentFind(query)
-      res.status(200).json(result);
-    } catch (error) {
-      next(error);
-    }
+  index: Handler = async (req, res) => {
+    const query = GetAppointmentsRequestSchema.parse(req.query);
+    const appoitment = await this.appointmentService.getAppointmentFind(query)
+    return res.status(201).json(appoitment)
   };
-  create: Handler = async (req, res, next) => {
-    try {
-      const body = CreateAppointmentRequestSchema.parse(req.body)
-      const newAppointment = await this.appointmentService.createAppointment(body);
-      res.status(200).json(newAppointment);
-    } catch (error) {
-      next(error);
-    }
+  create: Handler = async (req, res) => {
+      const query = CreateAppointmentRequestSchema.parse(req.body)
+      const newAppointment = await this.appointmentService.createAppointment(query);
+       return res.status(200).json(newAppointment);
   };
-  show: Handler = async (req, res, next) => {
-    try {
+  show: Handler = async (req, res) => {
       const id = +req.params.id;
       const appointment = await this.appointmentService.getAppointmentFindById(id);
-      res.status(200).json(appointment);
-    } catch (error) {
-      next(error);
-    }
+       return res.status(200).json(appointment);
   };
-  update: Handler = async (req, res, next) => {
-    try {
+  update: Handler = async (req, res) => {
       const id = +req.params.id;
       const body = UpdateAppointmentRequestSchema.parse(req.body);
+      console.log("Body:", req.body.date);
       const updatedAppointment = await this.appointmentService.updateAppointment(id, body);
-      res.status(200).json(updatedAppointment);
-    } catch (error) {
-      next(error);
-    }
+       return res.status(200).json(updatedAppointment);
   };
-  delete: Handler = async (req, res, next) => {
-    try {
+  delete: Handler = async (req, res) => {
       const id = Number(req.params.id);
       const deleteAppointment = await this.appointmentService.deleteAppointment(id);
-      res.json(deleteAppointment);
-    } catch (error) {
-      next(error);
-    }
+      return res.json(deleteAppointment);
   };
 }

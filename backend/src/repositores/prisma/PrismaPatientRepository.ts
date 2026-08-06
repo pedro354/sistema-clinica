@@ -39,6 +39,7 @@ export class PrismaPatientRepository implements PatientRepository {
         })
     }
     async create(attributes: CreatePatientAttributes): Promise<Patient> {
+            console.log(attributes);
         return prisma.patient.create({
             data: attributes
         })
@@ -47,6 +48,7 @@ export class PrismaPatientRepository implements PatientRepository {
         return prisma.patient.update({
             where: { id } ,
             data: attributes
+            
         })
     }
     async delete(id: number): Promise<Patient> {

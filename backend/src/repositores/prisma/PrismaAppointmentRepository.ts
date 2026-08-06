@@ -41,7 +41,7 @@ export class PrismaAppoitmentRepository implements AppointmentRepository {
     return prisma.appointment.findUnique({
       where: { id },
       include: {
-        patient: true,
+        patient: true
       },
     });
   }
@@ -54,7 +54,7 @@ export class PrismaAppoitmentRepository implements AppointmentRepository {
   ): Promise<Appointment> {
     return prisma.appointment.update({
       where: { id },
-      data: attributes,
+      data: attributes
     });
   }
   async delete(id: number): Promise<Appointment> {

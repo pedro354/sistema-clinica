@@ -23,4 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
+#IA
+
+docs/IA/*
+
 test
+
+#refact
+.refact/

@@ -1,8 +1,8 @@
 // Configuração central das rotas da aplicação.
 // Define layouts, páginas e navegação.
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Teste from "../../test/Teste";
+import Landing from "../pages/landing/Landing";
 
 const router = createBrowserRouter([
     {
@@ -11,7 +11,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Teste />
+                element: <Landing />,
             }
         ]
     }

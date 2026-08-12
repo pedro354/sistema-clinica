@@ -1,31 +1,30 @@
 import { Container } from "../../../Components/ui/Container/Container";
 
 export function Hero() {
-    return (
-        <section className="py-16">
-            <Container>
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-
+  return (
+    <section className="py-12 sm:py-16">
+      <Container>
+        <div className="flex flex-col items-center gap-10 md:flex-row md:justify-between md:gap-12">
           {/* TEXTO */}
-          <div className="basis-1/3 ">
-            <h1 className="text-4xl md:text-5xl font-semibold text-gray-800 leading-tight">
+          <div className="w-full md:basis-1/3">
+            <h1 className="text-4xl font-semibold leading-tight text-gray-800 sm:text-5xl">
               Mais acolhimento <br />
-              sua rotina. <br />
+              na sua rotina. <br />
               Mais tempo para <br />
               <span className="text-green-700">o que importa.</span>
             </h1>
 
-            <p className="mt-6 text-gray-600">
+            <p className="mt-6 max-w-xl leading-relaxed text-gray-600">
               O Clinic System organiza sua clínica para que você possa se dedicar ao que realmente transforma vidas.
             </p>
 
             {/* BOTÕES */}
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <button className="px-6 py-3 rounded-md bg-orange-500 text-white text-sm hover:bg-orange-600 transition cursor-pointer">
+              <button className="cursor-pointer rounded-md bg-orange-500 px-6 py-3 text-sm text-white transition hover:bg-orange-600">
                 Começar agora
               </button>
 
-              <button className="px-6 py-3 rounded-md border border-gray-300 text-sm text-gray-700 hover:bg-gray-100 transition cursor-pointer">
+              <button className="cursor-pointer rounded-md border border-gray-300 px-6 py-3 text-sm text-gray-700 transition hover:bg-gray-100">
                 Ver funcionalidades
               </button>
             </div>
@@ -36,16 +35,15 @@ export function Hero() {
           </div>
 
           {/* IMAGEM */}
-          <div className="basis-2/3 ">
-        <img
-          src="./dash.png"
-          alt="Dashboard"
-          className=""
-        />
+          <div className="w-full md:basis-2/3">
+            <img
+              src="./dash.png"
+              alt="Dashboard do Clinic System"
+              className="mx-auto w-full max-w-3xl"
+            />
           </div>
-
         </div>
-        </Container>
-        </section>
-    );
+      </Container>
+    </section>
+  );
 }

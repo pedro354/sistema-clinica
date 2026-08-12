@@ -9,7 +9,7 @@ export function Hero() {
           {/* TEXTO */}
           <div className="basis-1/3 ">
             <h1 className="text-4xl md:text-5xl font-semibold text-gray-800 leading-tight">
-              Mais acolhimento em <br />
+              Mais acolhimento na sua clínica <br />
               sua rotina. <br />
               Mais tempo para <br />
               <span className="text-green-700">o que importa.</span>

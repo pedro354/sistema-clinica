@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 *,
@@ -11,5 +12,9 @@ html, body {
   background-color: #f1e8d3; /* já alinhado com sua landing */
   font-family: 'Inter', sans-serif;
   font-weight: 400;
+}
+
+.dashboard-shell {
+  font-family: 'Poppins', 'Inter', sans-serif;
 }
 

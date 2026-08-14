@@ -3,6 +3,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Landing from "../pages/landing/Landing";
+import Dashboard from "../pages/dashboard/Dashboard";
 
 const router = createBrowserRouter([
     {
@@ -12,7 +13,11 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: <Landing />,
-            }
+            },
+            {
+                path: "dashboard",
+                element: <Dashboard />,
+            },
         ]
     }
 ]);

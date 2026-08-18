@@ -29,7 +29,8 @@ model User {
 model Patient {
   id           Int           @id @default(autoincrement())
   name         String
-  phone        String?
+  phone        String
+  email        String?
   //Define a relação entre o usuario e o paciente
   user         User          @relation(fields: [userId], references: [id])
   userId       Int

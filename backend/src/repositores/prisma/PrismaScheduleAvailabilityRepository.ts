@@ -1,6 +1,6 @@
-import { Prisma, ScheduleAvailability } from "../../../generated/prisma/client";
-import { prisma } from "../../../prisma/lib/prisma";
-import { CreateScheduleAvailabilityAttributes, FindScheduleAvailabilityParams, ScheduleAvailabilityRepository } from "../ScheduleAvailabilityRepository";
+import { Prisma, ScheduleAvailability } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../prisma/lib/prisma.js";
+import { CreateScheduleAvailabilityAttributes, FindScheduleAvailabilityParams, ScheduleAvailabilityRepository } from "../ScheduleAvailabilityRepository.js";
 
 export class PrismaScheduleAvailabilityRepository implements ScheduleAvailabilityRepository {
     async find(params: FindScheduleAvailabilityParams): Promise<ScheduleAvailability[]>{

@@ -1,6 +1,6 @@
-import { Patient, Prisma } from "../../../generated/prisma/client";
-import { prisma } from "../../../prisma/lib/prisma";
-import { CreatePatientAttributes, FindPatientsParams, PatientRepository } from "../PatientRepository";
+import { Patient, Prisma } from "../../../generated/prisma/client.js";
+import { prisma } from "../../../prisma/lib/prisma.js";
+import { CreatePatientAttributes, FindPatientsParams, PatientRepository } from "../PatientRepository.js";
 
 export class PrismaPatientRepository implements PatientRepository {
     async find(params: FindPatientsParams): Promise<Patient[]> {

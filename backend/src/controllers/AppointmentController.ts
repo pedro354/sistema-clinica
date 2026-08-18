@@ -1,5 +1,5 @@
-import { AppointmentService } from '../services/AppointmentService';
-import { CreateAppointmentRequestSchema, GetAppointmentsRequestSchema, UpdateAppointmentRequestSchema } from './schema/AppoitmentRequestSchema';
+import { AppointmentService } from '../services/AppointmentService.js';
+import { CreateAppointmentRequestSchema, GetAppointmentsRequestSchema, UpdateAppointmentRequestSchema } from './schema/AppoitmentRequestSchema.js';
 import { Handler } from 'express';
 
 export class AppoitmentController {

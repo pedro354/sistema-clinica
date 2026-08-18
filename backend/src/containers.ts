@@ -1,15 +1,15 @@
-import { UserController } from "./controllers/UserController";
-import { UserService } from "./services/UserService";
-import { PrismaUserRepository } from './repositores/prisma/PrismaUserRepository';
-import { PrismaPatientRepository } from "./repositores/prisma/PrismaPatientRepository";
-import { PatientService } from "./services/PatientService";
-import { PatientController } from "./controllers/PatientController";
-import { PrismaAppoitmentRepository } from "./repositores/prisma/PrismaAppointmentRepository";
-import { PrismaScheduleAvailabilityRepository } from "./repositores/prisma/PrismaScheduleAvailabilityRepository";
-import { AppointmentService } from "./services/AppointmentService";
-import { ScheduleAvailabilityService } from "./services/ScheduleAvailabilityService";
-import { AppoitmentController } from "./controllers/AppointmentController";
-import { ScheduleAvailabilityController } from "./controllers/ScheduleAvailabilityController";
+import { UserController } from "./controllers/UserController.js";
+import { UserService } from "./services/UserService.js";
+import { PrismaUserRepository } from './repositores/prisma/PrismaUserRepository.js';
+import { PrismaPatientRepository } from "./repositores/prisma/PrismaPatientRepository.js";
+import { PatientService } from "./services/PatientService.js";
+import { PatientController } from "./controllers/PatientController.js";
+import { PrismaAppoitmentRepository } from "./repositores/prisma/PrismaAppointmentRepository.js";
+import { PrismaScheduleAvailabilityRepository } from "./repositores/prisma/PrismaScheduleAvailabilityRepository.js";
+import { AppointmentService } from "./services/AppointmentService.js";
+import { ScheduleAvailabilityService } from "./services/ScheduleAvailabilityService.js";
+import { AppoitmentController } from "./controllers/AppointmentController.js";
+import { ScheduleAvailabilityController } from "./controllers/ScheduleAvailabilityController.js";
 
 export const userRepository = new PrismaUserRepository()
 export const patientRepository = new PrismaPatientRepository()

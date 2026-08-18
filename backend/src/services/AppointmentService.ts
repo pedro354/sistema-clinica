@@ -1,17 +1,18 @@
-import { AppointmentStatus } from '../../generated/prisma/enums';
-import { ConflictError } from '../errors/ConflictError';
-import { NotFoundError } from '../errors/NotFoundErros';
-import { ValidationError } from '../errors/ValidationError';
+import { AppointmentStatus } from '../../generated/prisma/enums.js';
+import { ConflictError } from '../errors/ConflictError.js';
+import { NotFoundError } from '../errors/NotFoundErros.js';
+import { ValidationError } from '../errors/ValidationError.js';
 import {
   AppointmentRepository,
   AppointmentWhereParams,
   CreateAppointmentAttributes,
-} from '../repositores/AppointmentRepository';
-import { PatientRepository } from '../repositores/PatientRepository';
+} from '../repositores/AppointmentRepository.js';
+import { PatientRepository } from '../repositores/PatientRepository.js';
 
 export interface GetAppointmentParams {
   startDate: Date;
   endDate: Date;
+  userId?: number;
   status?: AppointmentStatus;
   sortBy?: 'date' | 'status';
   order?: 'asc' | 'desc';
@@ -24,9 +25,10 @@ export class AppointmentService {
   ) {}
   // Public API
   async getAppointmentFind(params: GetAppointmentParams) {
-    const { startDate, endDate, status, sortBy, order } = params;
+    const { startDate, endDate, userId, status, sortBy, order } = params;
 
     const where: AppointmentWhereParams = {};
+    if (userId !== undefined) where.userId = userId;
     const queryStartDate = new Date(startDate);
     queryStartDate.setHours(0, 0, 0, 0);
     const queryEndDate = new Date(endDate);
@@ -99,6 +101,7 @@ console.log("Local:", params.startDate.toLocaleString("pt-BR"));
   ) {
     const duplicated = await this.appointmentRepository.find({
       where: {
+        userId: patientId,
         patientId: patientId,
         date: {
           startDate: startDate,
@@ -134,7 +137,7 @@ private async ensureNoConflict(
   const APPOINTMENT_DURATION = 60 * 60 * 1000; // 1 hora
 
   const appointments = await this.appointmentRepository.find({
-    where: {},
+    where: {userId: appointmentId},
   });
 
   const newStart = appointmentDate.getTime();

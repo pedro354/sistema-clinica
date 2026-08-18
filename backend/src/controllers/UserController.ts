@@ -1,6 +1,6 @@
 import { Handler } from "express";
-import { UserService } from "../services/UserService";
-import { CreateUserSchema, UpdateUserSchema } from "./schema/UserRequestSchema";
+import { UserService } from "../services/UserService.js";
+import { CreateUserSchema, UpdateUserSchema } from "./schema/UserRequestSchema.js";
 
 export class UserController {
     constructor (private readonly userService: UserService) {}

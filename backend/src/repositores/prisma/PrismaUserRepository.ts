@@ -1,6 +1,6 @@
-import { User } from '../../../generated/prisma/client';
-import { CreateUserAttributes, UserRepository } from '../UserRepository';
-import { prisma } from './../../../prisma/lib/prisma';
+import { User } from '../../../generated/prisma/client.js';
+import { CreateUserAttributes, UserRepository } from '../UserRepository.js';
+import { prisma } from './../../../prisma/lib/prisma.js';
 
 export class PrismaUserRepository implements UserRepository {
     async find(): Promise<User[]>{

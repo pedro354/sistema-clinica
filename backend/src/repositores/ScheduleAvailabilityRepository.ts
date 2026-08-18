@@ -1,5 +1,5 @@
-import { ScheduleAvailability } from "../../generated/prisma/client"
-import { DateRange } from "../types/DateRange"
+import { ScheduleAvailability } from "../../generated/prisma/client.js"
+import { DateRange } from "../types/DateRange.js"
 
 export interface ScheduleAvailabilityWhereParams {
     date?: DateRange

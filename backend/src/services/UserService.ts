@@ -1,10 +1,10 @@
-import { ConflictError } from '../errors/ConflictError';
-import { ValidationError } from '../errors/ValidationError';
-import { EMAIL_REGEX } from '../utils/regex';
+import { ConflictError } from '../errors/ConflictError.js';
+import { ValidationError } from '../errors/ValidationError.js';
+import { EMAIL_REGEX } from '../utils/regex.js';
 import {
   CreateUserAttributes,
   UserRepository,
-} from './../repositores/UserRepository';
+} from './../repositores/UserRepository.js';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
   async getUser() {
@@ -13,6 +13,7 @@ export class UserService {
   }
   async getUserById(userId: number) {
     await this.validateUser(userId);
+    return await this.userRepository.findById(userId);
   }
   async createUser(params: CreateUserAttributes) {
     this.validateName(params.name);

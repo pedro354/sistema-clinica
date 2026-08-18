@@ -1,7 +1,8 @@
-import { Appointment } from "../../generated/prisma/client";
-import { DateRange } from "../types/DateRange";
+import { Appointment } from "../../generated/prisma/client.js";
+import { DateRange } from "../types/DateRange.js";
 
 export type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED"
+
 
 export interface AppointmentWhereParams {
     date?: DateRange
@@ -16,7 +17,7 @@ export interface FindAppointmentsParams {
     offset?: number
     limit?: number
     include?: {
-        patient?: boolean
+        patient?: boolean,
     }
 }
 export interface CreateAppointmentAttributes {

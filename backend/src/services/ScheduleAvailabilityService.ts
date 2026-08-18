@@ -1,13 +1,13 @@
-import { UserRepository } from './../repositores/UserRepository';
+import { UserRepository } from './../repositores/UserRepository.js';
 import {
   CreateScheduleAvailabilityAttributes,
   ScheduleAvailabilityWhereParams,
-} from './../repositores/ScheduleAvailabilityRepository';
-import { AppointmentRepository } from '../repositores/AppointmentRepository';
-import { ScheduleAvailabilityRepository } from '../repositores/ScheduleAvailabilityRepository';
-import { NotFoundError } from '../errors/NotFoundErros';
-import { ValidationError } from '../errors/ValidationError';
-import { ConflictError } from '../errors/ConflictError';
+} from './../repositores/ScheduleAvailabilityRepository.js';
+import { AppointmentRepository } from '../repositores/AppointmentRepository.js';
+import { ScheduleAvailabilityRepository } from '../repositores/ScheduleAvailabilityRepository.js';
+import { NotFoundError } from '../errors/NotFoundErros.js';
+import { ValidationError } from '../errors/ValidationError.js';
+import { ConflictError } from '../errors/ConflictError.js';
 
 export interface GetScheduleAvailabilityParams {
   startDate: Date;

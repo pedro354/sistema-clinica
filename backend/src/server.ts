@@ -1,5 +1,5 @@
-import './config/env';
-import app from './app';
+import './config/env.js';
+import app from './app.js';
 
 console.log("SERVER NOVO");
 const PORT = process.env.PORT ?? 3000;

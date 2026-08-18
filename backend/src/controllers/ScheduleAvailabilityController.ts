@@ -1,6 +1,6 @@
 import { Handler } from 'express';
-import { CreateScheduleAvailabilityRequestSchema, GetScheduleAvailabilityRequestSchema, UpdateScheduleAvailabilityRequestSchema } from './schema/ScheduleAvailabilityRequestSchema';
-import { ScheduleAvailabilityService } from '../services/ScheduleAvailabilityService';
+import { CreateScheduleAvailabilityRequestSchema, GetScheduleAvailabilityRequestSchema, UpdateScheduleAvailabilityRequestSchema } from './schema/ScheduleAvailabilityRequestSchema.js';
+import { ScheduleAvailabilityService } from '../services/ScheduleAvailabilityService.js';
 
 export class ScheduleAvailabilityController {
   constructor(private readonly scheduleAvailability: ScheduleAvailabilityService ) {}

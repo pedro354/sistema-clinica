@@ -49,7 +49,7 @@ console.log("Local:", params.startDate.toLocaleString("pt-BR"));
   }
 
   async getAppointmentFindById(id: number) {
-    await this.getAppointmentOrThrow(id);
+  return await this.getAppointmentOrThrow(id);
   }
 
   async createAppointment(params: CreateAppointmentAttributes) {
@@ -57,7 +57,7 @@ console.log("Local:", params.startDate.toLocaleString("pt-BR"));
 
     this.validateAppointmentDate(params.date);
     
-    await this.ensureNoDuplicate(params.patientId, params.date, params.date);
+    await this.ensureNoDuplicate(params.patientId, params.userId, params.date, params.date);
         
     return this.appointmentRepository.create(params);
   }
@@ -96,12 +96,13 @@ console.log("Local:", params.startDate.toLocaleString("pt-BR"));
   }
   private async ensureNoDuplicate(
     patientId: number,
+    userId: number,
     startDate: Date,
     endDate: Date,
   ) {
     const duplicated = await this.appointmentRepository.find({
       where: {
-        userId: patientId,
+        userId: userId,
         patientId: patientId,
         date: {
           startDate: startDate,
@@ -131,20 +132,20 @@ console.log("Local:", params.startDate.toLocaleString("pt-BR"));
     }
   }
 private async ensureNoConflict(
-  appointmentId: number,
+  userId: number,
   appointmentDate: Date,
 ) {
   const APPOINTMENT_DURATION = 60 * 60 * 1000; // 1 hora
 
   const appointments = await this.appointmentRepository.find({
-    where: {userId: appointmentId},
+    where: {userId},
   });
 
   const newStart = appointmentDate.getTime();
   const newEnd = newStart + APPOINTMENT_DURATION;
 
   const hasConflict = appointments.some((appointment) => {
-    if (appointment.id === appointmentId) {
+    if (appointment.id === userId) {
       return false;
     }
 

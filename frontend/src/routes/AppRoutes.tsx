@@ -6,6 +6,7 @@ import Landing from "../pages/landing/Landing";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Patients from "../pages/patients/Patients";
 import MainLayout from "../layouts/MainLayout/MainLayout";
+import Appointments from "../pages/appointments/Appointments";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
                     {
                         path: "patients",
                         element: <Patients />,
+                    },
+                    {
+                        path: "appointments",
+                        element: <Appointments />,
                     },
                 ]
             },

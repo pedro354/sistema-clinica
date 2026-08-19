@@ -25,11 +25,13 @@ export type Patient = {
     updatedAt: Date;
 };
 
+export type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED";
+
 export type Appointment = {
     id: number;
     date: Date;
-    status: string;
-    description: string;
+    status: AppointmentStatus;
+    description?: string;
     patientId: number;
     userId: number;
     createdAt: Date;
@@ -93,7 +95,7 @@ const deletePatient = async (id: number): Promise<void> => {
   await axios.delete(`http://localhost:3000/api/patient/${id}`);
 };
 
-export const getAppointments = async (userId: number, startDate: Date, endDate: Date, status?: string): Promise<Appointment[]> => {
+const getAppointments = async (userId: number, startDate: Date, endDate: Date, status?: AppointmentStatus): Promise<Appointment[]> => {
     const response = await axios.get<Appointment[]>(
         `http://localhost:3000/api/appointment`,{
             params: {
@@ -108,7 +110,50 @@ export const getAppointments = async (userId: number, startDate: Date, endDate: 
     return response.data;
 }
 
-export const getUpcomingAppointments = async (userId: number, startDate: Date, endDate: Date) => {
+const getAppointment = async (id: number): Promise<Appointment> => {
+    const response = await axios.get<Appointment>(
+        `http://localhost:3000/api/appointment/${id}`
+    );
+
+    return response.data;
+};
+
+const createAppointment = async (data: {
+    userId: number;
+    patientId: number;
+    date: string;
+    description?: string;
+}): Promise<Appointment> => {
+    const response = await axios.post<Appointment>(
+        "http://localhost:3000/api/appointment",
+        data
+    );
+
+    return response.data;
+};
+
+const updateAppointment = async (
+    id: number,
+    data: {
+        patientId?: number;
+        date?: string;
+        description?: string;
+        status?: AppointmentStatus;
+    }
+): Promise<Appointment> => {
+    const response = await axios.put<Appointment>(
+        `http://localhost:3000/api/appointment/${id}`,
+        data
+    );
+
+    return response.data;
+};
+
+const deleteAppointment = async (id: number): Promise<void> => {
+    await axios.delete(`http://localhost:3000/api/appointment/${id}`);
+};
+
+const getUpcomingAppointments = async (userId: number, startDate: Date, endDate: Date) => {
     const response = await axios.get<Appointment[]>(
         `http://localhost:3000/api/appointment`,{
             params: {
@@ -121,7 +166,7 @@ export const getUpcomingAppointments = async (userId: number, startDate: Date, e
     )
     return response.data;
 }
-export const getScheduleAvailability = async (
+const getScheduleAvailability = async (
   userId: number,
   startDate: Date,
   endDate: Date
@@ -148,6 +193,10 @@ export const getScheduleAvailability = async (
     getUser,
     getPatients,
     getAppointments,
+    getAppointment,
+    createAppointment,
+    updateAppointment,
+    deleteAppointment,
     getUpcomingAppointments,
     getScheduleAvailability,
     createPatient,

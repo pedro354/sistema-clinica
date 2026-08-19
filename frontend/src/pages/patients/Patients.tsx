@@ -47,7 +47,7 @@ useEffect(() => {
   );
   return (
     <div className="min-h-screen bg-[#f1e8d3] px-5 py-8 sm:px-8 lg:px-10">
-      <div className="mx-auto max-w-[1440px]">
+      <div className="mx-auto max-w-360]">
 
         <section className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
@@ -96,7 +96,7 @@ useEffect(() => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[650px]">
+            <table className="w-full min-w-162.5">
               <thead>
                 <tr className="border-b border-[#ebe9e1] text-left">
                   <th className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.08em] text-[#8a968f]">

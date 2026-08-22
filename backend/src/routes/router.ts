@@ -26,5 +26,7 @@ router.get('/scheduleavailability', scheduleAvailabilityController.index)
 router.post('/scheduleavailability', scheduleAvailabilityController.create)
 router.get('/scheduleavailability/:id', scheduleAvailabilityController.show)
 router.put('/scheduleavailability/:id', scheduleAvailabilityController.update)
+router.delete('/scheduleavailability/:id', scheduleAvailabilityController.delete)
+
 
 export default router

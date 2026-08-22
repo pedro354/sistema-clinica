@@ -24,4 +24,5 @@ export interface ScheduleAvailabilityRepository {
     findById: (id: number) => Promise<ScheduleAvailability | null>
     create: (attributes: CreateScheduleAvailabilityAttributes) => Promise<ScheduleAvailability>
     update: (id: number, attributes: Partial<CreateScheduleAvailabilityAttributes>) => Promise<ScheduleAvailability | null>
+    delete: (id: number) => Promise<ScheduleAvailability>
 }

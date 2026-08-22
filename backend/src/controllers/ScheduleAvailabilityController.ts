@@ -25,4 +25,9 @@ export class ScheduleAvailabilityController {
       const updatedAppointment = await this.scheduleAvailability.updateScheduleAvailability(id, body);
       return res.status(200).json(updatedAppointment);
   };
+  delete: Handler = async (req, res) => {
+    const id = +req.params.id;
+    const deleteSchedule = await this.scheduleAvailability.deleteSchedule(id)
+    return res.json(deleteSchedule)
+  }
 }

@@ -90,6 +90,14 @@ export class ScheduleAvailabilityService {
     }
     return this.scheduleAvailabilityRepository.update(id, attributes);
   }
+    async deleteSchedule(id: number) {
+    
+    const schedule = await this.getScheduleOrThrow(id)
+
+    return await this.scheduleAvailabilityRepository.delete(schedule.id);
+  }
+
+
   private async validateUser(userId: number){
     const user = await this.userRepository.findById(userId);
     if (!user) throw new NotFoundError('Associated user not found!');

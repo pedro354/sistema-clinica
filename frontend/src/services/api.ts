@@ -186,6 +186,39 @@ const getScheduleAvailability = async (
   return response.data;
 };
 
+const createScheduleAvailability = async (data: {
+  userId: number;
+  startDate: string;
+  endDate: string;
+  isAvailable: boolean;
+}): Promise<ScheduleAvailability> => {
+  const response = await axios.post<ScheduleAvailability>(
+    "http://localhost:3000/api/scheduleavailability",
+    data
+  );
+
+  return response.data;
+};
+
+const updateScheduleAvailability = async (
+  id: number,
+  data: {
+    startDate?: string;
+    endDate?: string;
+    isAvailable?: boolean;
+  }
+): Promise<ScheduleAvailability> => {
+  const response = await axios.put<ScheduleAvailability>(
+    `http://localhost:3000/api/scheduleavailability/${id}`,
+    data
+  );
+
+  return response.data;
+};
+
+const deleteScheduleAvailability = async (id: number): Promise<void> => {
+    await axios.delete(`http://localhost:3000/api/scheduleavailability/${id}`);
+};
 
 
  export default {
@@ -201,5 +234,9 @@ const getScheduleAvailability = async (
     getScheduleAvailability,
     createPatient,
     updatePatient,
-    deletePatient
+    deletePatient,
+    createScheduleAvailability,
+    updateScheduleAvailability,
+    deleteScheduleAvailability
+
 };

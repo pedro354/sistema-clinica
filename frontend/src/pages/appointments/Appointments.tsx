@@ -11,6 +11,31 @@ import {
 } from "./components/AppointmentFilters";
 import { AppointmentTable } from "./components/AppointmentTable";
 
+async function fetchAppointments(
+  period: AppointmentPeriod,
+  status: AppointmentStatus | "",
+) {
+  const startDate = new Date();
+  const endDate = new Date();
+
+  if (period === "today") {
+    endDate.setHours(23, 59, 59, 999);
+  } else if (period === "week") {
+    endDate.setDate(startDate.getDate() + 7);
+  } else if (period === "month") {
+    endDate.setDate(startDate.getDate() + 30);
+  } else {
+    endDate.setFullYear(startDate.getFullYear() + 1);
+  }
+
+  const [appointmentData, patientData] = await Promise.all([
+    api.getAppointments(1, startDate, endDate, status || undefined),
+    api.getPatients(1),
+  ]);
+
+  return { appointmentData, patientData };
+}
+
 export default function Appointments() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -19,47 +44,42 @@ export default function Appointments() {
   const [editingAppointment, setEditingAppointment] =
     useState<Appointment | null>(null);
 
-
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<AppointmentStatus | "">("");
   const [period, setPeriod] = useState<AppointmentPeriod>("month");
 
-  
-const loadAppointments = async () => {
-  try {
-    const startDate = new Date();
-    const endDate = new Date();
+  const loadAppointments = async () => {
+    try {
+      const { appointmentData, patientData } = await fetchAppointments(
+        period,
+        status,
+      );
 
-    if (period === "today") {
-      endDate.setHours(23, 59, 59, 999);
-    } else if (period === "week") {
-      endDate.setDate(startDate.getDate() + 7);
-    } else if (period === "month") {
-      endDate.setDate(startDate.getDate() + 30);
-    } else {
-      endDate.setFullYear(startDate.getFullYear() + 1);
+      setAppointments(appointmentData);
+      setPatients(patientData);
+    } catch (error) {
+      console.error("Erro ao buscar consultas:", error);
     }
+  };
 
-    const [appointmentData, patientData] = await Promise.all([
-      api.getAppointments(
-        1,
-        startDate,
-        endDate,
-        status || undefined
-      ),
-      api.getPatients(1),
-    ]);
+  useEffect(() => {
+    let ignore = false;
 
-    setAppointments(appointmentData);
-    setPatients(patientData);
-  } catch (error) {
-    console.error("Erro ao buscar consultas:", error);
-  }
-};
+    fetchAppointments(period, status)
+      .then(({ appointmentData, patientData }) => {
+        if (ignore) return;
 
-useEffect(() => {
-  loadAppointments();
-}, [period, status]);
+        setAppointments(appointmentData);
+        setPatients(patientData);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar consultas:", error);
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [period, status]);
 
   const getPatientName = (patientId: number) => {
     const patient = patients.find(

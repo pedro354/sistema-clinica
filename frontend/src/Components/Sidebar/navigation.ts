@@ -13,7 +13,7 @@ export const navigationItems: NavigationItem[] = [
   { label: "Agenda", icon: CalendarDays, path: "/agenda" },
   { label: "Pacientes", icon: UsersRound, path: "/patients" },
   { label: "Consultas", icon: ClipboardList, path: "/appointments" },
-  { label: "Disponibilidade", icon: Clock3, path: "/availability" },
+  { label: "Disponibilidade", icon: Clock3, path: "/scheduleavailability" },
   { label: "Mensagens", icon: MessageCircle, path: "/messages" },
   { label: "Relatórios", icon: BarChart3, path: "/reports" },
   { label: "Configurações", icon: Settings, path: "/settings" },

@@ -8,6 +8,10 @@ import Patients from "../pages/patients/Patients";
 import MainLayout from "../layouts/MainLayout/MainLayout";
 import Appointments from "../pages/appointments/Appointments";
 import ScheduleAvailability from "../pages/schedule-availability/ScheduleAvailability";
+import Settings from "../pages/settings/settings";
+import Reports from "../pages/reports/Reports";
+import Messages from "../pages/messages/Messages";
+import Planner from "../pages/planner/Planner";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +40,22 @@ const router = createBrowserRouter([
                     {
                         path: "scheduleavailability",
                         element: <ScheduleAvailability />
+                    },
+                    {
+                        path: "planner",
+                        element: <Planner />
+                    },
+                    {
+                        path: "messages",
+                        element: <Messages />
+                    },
+                    {
+                        path: "settings",
+                        element: <Settings />
+                    },
+                    {
+                        path: "reports",
+                        element: <Reports />
                     }
                 ]
             },

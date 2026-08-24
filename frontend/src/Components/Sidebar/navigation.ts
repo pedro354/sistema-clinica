@@ -10,7 +10,7 @@ type NavigationItem = {
 
 export const navigationItems: NavigationItem[] = [
   { label: "Dashboard", icon: Home, path: "/dashboard", },
-  { label: "Agenda", icon: CalendarDays, path: "/agenda" },
+  { label: "Agenda", icon: CalendarDays, path: "/planner" },
   { label: "Pacientes", icon: UsersRound, path: "/patients" },
   { label: "Consultas", icon: ClipboardList, path: "/appointments" },
   { label: "Disponibilidade", icon: Clock3, path: "/scheduleavailability" },

@@ -176,8 +176,8 @@ const getScheduleAvailability = async (
     {
       params: {
         userId,
-        startDate,
-        endDate,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
         isAvailable: true
       },
     }
@@ -220,6 +220,9 @@ const deleteScheduleAvailability = async (id: number): Promise<void> => {
     await axios.delete(`http://localhost:3000/api/scheduleavailability/${id}`);
 };
 
+const getPlanner = async (): Promise<void> => {
+    await axios.get("http://localhost:3000/api/planner")
+}
 
  export default {
     login,
@@ -237,6 +240,6 @@ const deleteScheduleAvailability = async (id: number): Promise<void> => {
     deletePatient,
     createScheduleAvailability,
     updateScheduleAvailability,
-    deleteScheduleAvailability
-
+    deleteScheduleAvailability,
+    getPlanner
 };

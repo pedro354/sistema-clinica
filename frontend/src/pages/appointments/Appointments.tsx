@@ -25,7 +25,7 @@ async function fetchAppointments(
   } else if (period === "month") {
     endDate.setDate(startDate.getDate() + 30);
   } else {
-    endDate.setFullYear(startDate.getFullYear() + 1);
+    endDate.setDate(startDate.getDate() + 1);
   }
 
   const [appointmentData, patientData] = await Promise.all([

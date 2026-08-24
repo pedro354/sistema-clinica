@@ -8,10 +8,10 @@ export class PrismaScheduleAvailabilityRepository implements ScheduleAvailabilit
 
         if (params.where?.date) {
             where.startDate = {
-                gte: params.where?.date?.startDate,
+                lte: params.where.date.endDate
             }
             where.endDate = {
-                lte: params.where?.date?.endDate
+                gte: params.where.date.startDate,
             }
         }
         if (params.where?.userId !== undefined) {
@@ -21,6 +21,8 @@ export class PrismaScheduleAvailabilityRepository implements ScheduleAvailabilit
             where.isAvailable = params.where?.isAvailable
         }
 
+        console.log("DATE FILTER:", params.where?.date);
+        console.log("PRISMA WHERE:", where);
         return prisma.scheduleAvailability.findMany({
             where,
             include: {

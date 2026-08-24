@@ -10,8 +10,7 @@ export default function ScheduleAvailability() {
     const [availabilities, setAvailabilities] = useState<ScheduleAvailability[]>([]);
 
     const [showForm, setShowForm] = useState(false);
-    const [editingAvailability, setEditingAvailability] =
-        useState<ScheduleAvailability | null>(null);
+    const [editingAvailability, setEditingAvailability] = useState<ScheduleAvailability | null>(null);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -48,43 +47,8 @@ export default function ScheduleAvailability() {
     };
 
     useEffect(() => {
-        let ignore = false;
+        loadAvailabilities()
 
-        api.getScheduleAvailability(
-            1,
-            new Date(),
-            new Date(
-                new Date().setFullYear(
-                    new Date().getFullYear() + 1
-                )
-            )
-        )
-            .then((data) => {
-                if (ignore) return;
-
-                setAvailabilities(data);
-            })
-            .catch((error) => {
-                if (ignore) return;
-
-                console.error(
-                    "Erro ao buscar disponibilidades:",
-                    error
-                );
-
-                setError(
-                    "Não foi possível carregar as disponibilidades."
-                );
-            })
-            .finally(() => {
-                if (!ignore) {
-                    setLoading(false);
-                }
-            });
-
-        return () => {
-            ignore = true;
-        };
     }, []);
 
 
@@ -95,11 +59,17 @@ export default function ScheduleAvailability() {
 
     if (!confirmed) return;
 
-    try {
-      await api.deleteScheduleAvailability(schedule.id);
+try {
+    console.log("DELETANDO DISPONIBILIDADE:", schedule.id);
 
-      await loadAvailabilities();
-    } catch (error) {
+    await api.deleteScheduleAvailability(schedule.id);
+
+    console.log("DELETE CONCLUÍDO:", schedule.id);
+
+    await loadAvailabilities();
+}
+    
+    catch (error) {
     console.error("Erro ao excluir disponibilidade:", error);
 
     if (axios.isAxiosError(error)) {
@@ -151,9 +121,9 @@ export default function ScheduleAvailability() {
                     </div>
                 ) : (
                     <AvailabilityTable
-                        availabilities={availabilities}
-                        onEdit={setEditingAvailability}
-                        onDelete={handleDelete}
+                    availabilities={availabilities}
+                    onEdit={setEditingAvailability}
+                    onDelete={handleDelete}
                     />
                 )}
             </section>

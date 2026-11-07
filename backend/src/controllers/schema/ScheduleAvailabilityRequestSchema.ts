@@ -2,6 +2,11 @@ import z from "zod"
 
 const idSchema = z.number().int().positive("ID must be a positive integer")
 
+const queryIdSchema = z.coerce
+.number()
+.int()
+.positive("ID must be a positive integer")
+
 
 export const CreateScheduleAvailabilityRequestSchema = z.object({
     userId: idSchema,
@@ -13,8 +18,8 @@ export const CreateScheduleAvailabilityRequestSchema = z.object({
 export const UpdateScheduleAvailabilityRequestSchema = CreateScheduleAvailabilityRequestSchema.partial()
 
 export const GetScheduleAvailabilityRequestSchema = z.object({
-    userId: idSchema.optional(),
+    userId: queryIdSchema.optional(),
         startDate: z.coerce.date(),
         endDate: z.coerce.date(),
-    isAvailable: z.boolean().optional()
+    isAvailable: z.coerce.boolean().optional()
 })

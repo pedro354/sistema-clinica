@@ -1,10 +1,10 @@
-import { Appointment, Prisma } from '../../../generated/prisma/client';
-import { prisma } from '../../../prisma/lib/prisma';
+import { Appointment, Prisma } from '../../../generated/prisma/client.js';
+import { prisma } from '../../../prisma/lib/prisma.js';
 import {
   AppointmentRepository,
   CreateAppointmentAttributes,
   FindAppointmentsParams,
-} from '../AppointmentRepository';
+} from '../AppointmentRepository.js';
 
 export class PrismaAppoitmentRepository implements AppointmentRepository {
   async find(params: FindAppointmentsParams): Promise<Appointment[]> {

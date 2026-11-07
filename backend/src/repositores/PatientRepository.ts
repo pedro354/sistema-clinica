@@ -1,4 +1,4 @@
-import { Patient } from "../../generated/prisma/client";
+import { Patient } from "../../generated/prisma/client.js";
 export interface PatientWhereParams {
     name?: {
         like?: string
@@ -20,6 +20,7 @@ export interface FindPatientsParams {
 }
 export interface CreatePatientAttributes {
     name: string
+    email?: string
     phone: string
     userId: number
 }

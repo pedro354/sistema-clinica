@@ -1,5 +1,5 @@
-import { ScheduleAvailability } from "../../generated/prisma/client"
-import { DateRange } from "../types/DateRange"
+import { ScheduleAvailability } from "../../generated/prisma/client.js"
+import { DateRange } from "../types/DateRange.js"
 
 export interface ScheduleAvailabilityWhereParams {
     date?: DateRange
@@ -24,4 +24,5 @@ export interface ScheduleAvailabilityRepository {
     findById: (id: number) => Promise<ScheduleAvailability | null>
     create: (attributes: CreateScheduleAvailabilityAttributes) => Promise<ScheduleAvailability>
     update: (id: number, attributes: Partial<CreateScheduleAvailabilityAttributes>) => Promise<ScheduleAvailability | null>
+    delete: (id: number) => Promise<ScheduleAvailability>
 }

@@ -5,8 +5,14 @@ const PhoneSchema = z
 .regex(/^\(\d{2}\) 9\d{4}-\d{4}$/, "Invalid Phone, please type (00) 99999-9999")
 .transform((value) => value.replace(/\D/g, ""));
 
+const EmailSchema = z
+.string()
+.email("Invalid email")
+.transform((value) => value.toLowerCase())
+
 export const CreatePatientRequestSchema = z.object({
     name: z.string().min(3, "Name must be at least 3 characters long"),
+    email: EmailSchema.optional(),
     phone: PhoneSchema,
     userId: z.number().int().positive("User ID must be a positive integer")
 })

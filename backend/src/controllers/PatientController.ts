@@ -2,9 +2,9 @@ import {
   CreatePatientRequestSchema,
   getPatientsRequestSchema,
   updatePatientRequestSchema,
-} from './schema/PatientRequestSchema';
+} from './schema/PatientRequestSchema.js';
 import { Handler } from 'express';
-import { PatientService } from '../services/PatientService';
+import { PatientService } from '../services/PatientService.js';
 
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}

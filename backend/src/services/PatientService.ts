@@ -1,13 +1,13 @@
-import { NotFoundError } from '../errors/NotFoundErros';
-import { ValidationError } from '../errors/ValidationError';
-import { AppointmentRepository } from '../repositores/AppointmentRepository';
+import { NotFoundError } from '../errors/NotFoundErros.js';
+import { ValidationError } from '../errors/ValidationError.js';
+import { AppointmentRepository } from '../repositores/AppointmentRepository.js';
 import {
   CreatePatientAttributes,
   FindPatientsParams,
   PatientRepository,
-} from '../repositores/PatientRepository';
-import { UserRepository } from '../repositores/UserRepository';
-import { PHONE_REGEX } from '../utils/regex';
+} from '../repositores/PatientRepository.js';
+import { UserRepository } from '../repositores/UserRepository.js';
+import { PHONE_REGEX } from '../utils/regex.js';
 
 export class PatientService {
   constructor(

@@ -4,6 +4,14 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Landing from "../pages/landing/Landing";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Patients from "../pages/patients/Patients";
+import MainLayout from "../layouts/MainLayout/MainLayout";
+import Appointments from "../pages/appointments/Appointments";
+import ScheduleAvailability from "../pages/schedule-availability/ScheduleAvailability";
+import Settings from "../pages/settings/settings";
+import Reports from "../pages/reports/Reports";
+import Messages from "../pages/messages/Messages";
+import Planner from "../pages/planner/Planner";
 
 const router = createBrowserRouter([
     {
@@ -15,8 +23,41 @@ const router = createBrowserRouter([
                 element: <Landing />,
             },
             {
-                path: "dashboard",
-                element: <Dashboard />,
+                element: <MainLayout />,
+                children: [
+                    {
+                        path: "dashboard",
+                        element: <Dashboard />,
+                    },
+                    {
+                        path: "patients",
+                        element: <Patients />,
+                    },
+                    {
+                        path: "appointments",
+                        element: <Appointments />,
+                    },
+                    {
+                        path: "scheduleavailability",
+                        element: <ScheduleAvailability />
+                    },
+                    {
+                        path: "planner",
+                        element: <Planner />
+                    },
+                    {
+                        path: "messages",
+                        element: <Messages />
+                    },
+                    {
+                        path: "settings",
+                        element: <Settings />
+                    },
+                    {
+                        path: "reports",
+                        element: <Reports />
+                    }
+                ]
             },
         ]
     }

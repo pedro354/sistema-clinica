@@ -1,10 +1,13 @@
 import z from "zod"
 
-const idSchema = z.number().int().positive("ID must be a positive integer")
+const queryIdSchema = z.coerce
+.number()
+.int()
+.positive("ID must be a positive integer")
 
 export const CreateAppointmentRequestSchema = z.object({
-    userId: idSchema,
-    patientId: idSchema,
+    userId: queryIdSchema,
+    patientId: queryIdSchema,
     date: z.coerce
   .date()
   .refine(
@@ -20,8 +23,8 @@ export const CreateAppointmentRequestSchema = z.object({
 export const UpdateAppointmentRequestSchema = CreateAppointmentRequestSchema.partial()
 
 export const GetAppointmentsRequestSchema = z.object({
-    userId: idSchema.optional(),
-    patientId: idSchema.optional(),
+    userId: queryIdSchema.optional(),
+    patientId: queryIdSchema.optional(),
     sortBy: z.enum(["date", "status"]).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     offset: z.coerce.number().int("Offset must be a non-negative integer").nonnegative().optional(),

@@ -15,7 +15,7 @@ import Planner from "../pages/planner/Planner";
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: "/dashboard",
         element: <App />,
         children: [
             {

@@ -21,7 +21,7 @@ export function Navbar() {
               <a>Sobre</a>
               <a>Contato</a>
             </nav>
-              <NavLink to="/dashboard">
+              <NavLink to="/dashboard" onClick={() => console.log("Clicou no botão Entrar")}>
             <button className="cursor-pointer rounded-sm border-2 border-solid px-4 py-2 text-sm transition-colors duration-200 hover:bg-orange-300 hover:text-white">
               Entrar
             </button>
@@ -33,4 +33,3 @@ export function Navbar() {
   );
 }
 
-console.log(NavLink, "Entrou no NavBar");

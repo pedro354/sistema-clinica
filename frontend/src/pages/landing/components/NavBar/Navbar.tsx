@@ -16,7 +16,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-4 sm:gap-8">
             <nav className="items-center gap-6 md:flex lg:gap-8">
-              <a>Funcionalidades</a>
+              <a>Funcionalidadees</a>
               <a>Benefícios</a>
               <a>Sobre</a>
               <a>Contato</a>

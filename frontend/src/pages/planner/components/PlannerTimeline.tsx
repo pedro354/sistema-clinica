@@ -93,7 +93,7 @@ export function PlannerTimeline({
                         <div className="relative mt-5 space-y-3 border-l border-[#cbded4] pl-5">
                             { availabilityAppointments.length === 0 ? (
                                 <div className="relative">
-                                    <span className="absolute -left-[25px] top-2 h-2.5 w-2.5 rounded-full bg-[#39735b]" />
+                                    <span className="absolute -left-6.25 top-2 h-2.5 w-2.5 rounded-full bg-[#39735b]" />
 
                                     <p className="text-sm text-[#60766b]">
                                         Nenhuma consulta agendada neste
@@ -107,7 +107,7 @@ export function PlannerTimeline({
                                             key={ appointment.id }
                                             className="relative rounded-xl border border-[#ebe9e1] bg-white p-4 shadow-[0_2px_8px_rgba(50,74,61,0.03)]"
                                         >
-                                            <span className="absolute -left-[25px] top-5 h-2.5 w-2.5 rounded-full bg-[#39735b]" />
+                                            <span className="absolute -left-6.25 top-5 h-2.5 w-2.5 rounded-full bg-[#39735b]" />
 
                                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                                 <div>

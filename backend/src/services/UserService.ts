@@ -1,12 +1,18 @@
 import { ConflictError } from '../errors/ConflictError.js';
 import { ValidationError } from '../errors/ValidationError.js';
+import { LoginResult } from '../types/User.js';
 import { EMAIL_REGEX } from '../utils/regex.js';
 import {
   CreateUserAttributes,
   UserRepository,
 } from './../repositores/UserRepository.js';
+import bcrypt from 'bcrypt'
+import { TokenService } from './TokenService.js';
+
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+    constructor(
+        private readonly userRepository: UserRepository,
+        private readonly tokenService: TokenService){}  
   async getUser() {
     const user = this.userRepository.find();
     return user;
@@ -15,24 +21,48 @@ export class UserService {
     await this.validateUser(userId);
     return await this.userRepository.findById(userId);
   }
+
+  async loginUser(email: string, plainPassword: string ): Promise<LoginResult> {
+    
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) throw new ValidationError('Invalid email or password');
+
+    const isMatch = await bcrypt.compare(plainPassword, user.password);
+    if (!isMatch) throw new ValidationError('Invalid email or password');
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {password, ...publicUser} = user
+    
+    const token = this.tokenService.generateToken(user.id)
+
+
+    return {user: publicUser, token}
+  }
   async createUser(params: CreateUserAttributes) {
     this.validateName(params.name);
 
     await this.validateEmail(params.email);
 
     this.validatePassword(params.password);
+    
+    const hashedPassword = await this.hashPassword(params.password);
+    params.password = hashedPassword;
 
     return await this.userRepository.create(params);
   }
   async updateUser(userId: number, params: Partial<CreateUserAttributes>) {
     const currentUser = await this.validateUser(userId);
 
+
     if (params.email !== undefined) {
       await this.validateEmail(params.email, currentUser.id);
     }
     if (params.password) {
       await this.validatePassword(params.password);
+      const hashedPassword = await this.hashPassword(params.password);
+      params = { ...params, password: hashedPassword };
     }
+
     return await this.userRepository.update(userId, params);
   }
   private async validateUser(userId: number) {
@@ -55,8 +85,14 @@ export class UserService {
   }
   private async validatePassword(password: string) {
     if (!password.trim()) throw new ValidationError('Email is required!');
-    /* Hash bycript aqui quando chegar a parte de segurança! */
+
     if (password.length < 8)
       throw new ValidationError('Passowrd must be at least 8 characters');
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
   }
 }

@@ -9,6 +9,6 @@ export default [
         },
     },
     {
-        ignores: ["dist/**", "node_modules/**", "/frontend/src/services/api.ts"]
+        ignores: ["dist/**", "node_modules/**", "/frontend/src/services/api.ts", "@typescript-eslint/no-unused-vars"]
     }
     ]

@@ -12,7 +12,7 @@ import Settings from "../pages/settings/settings";
 import Reports from "../pages/reports/Reports";
 import Messages from "../pages/messages/Messages";
 import Planner from "../pages/planner/Planner";
-
+import { Auth } from "../pages/auth/auth";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -20,8 +20,12 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Landing />,
+                element: <Landing />
             },
+            {
+    path: "Auth",
+    element: <Auth />
+},
             {
                 element: <MainLayout />,
                 children: [

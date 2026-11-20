@@ -6,6 +6,7 @@ import axios from "axios";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
+    withCredentials: true
 });
 
 // ==============================
@@ -17,8 +18,16 @@ type loginData = {
     password: string;
 };
 
+type registerData = {
+    name: string;
+    email: string;
+    password: string;
+}
+type registerResponse = {
+    message: string;
+}
 type loginResponse = {
-    token: string;
+    user: User;
 };
 
 export type User = {
@@ -67,6 +76,10 @@ export type ScheduleAvailability = {
 // ==============================
 // AUTHENTICATION
 // ==============================
+const register = async(data: registerData): Promise<registerResponse> => {
+    const response = await api.post<registerResponse>("/user", data);
+    return response.data
+}
 
 const login = async (
     data: loginData
@@ -75,6 +88,10 @@ const login = async (
     return response.data;
 };
 
+const getSession = async (): Promise<User> => {
+    const response = await api.get<User>("/auth/me");
+    return response.data;
+};
 // ==============================
 // USERS
 // ==============================
@@ -294,6 +311,7 @@ const getPlanner = async (): Promise<void> => {
 
 export default {
     login,
+    register,
     getUser,
     getPatients,
     getAppointments,
@@ -310,4 +328,5 @@ export default {
     updateScheduleAvailability,
     deleteScheduleAvailability,
     getPlanner,
+    getSession
 };

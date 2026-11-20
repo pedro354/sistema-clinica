@@ -10,13 +10,16 @@ import { AppointmentService } from "./services/AppointmentService.js";
 import { ScheduleAvailabilityService } from "./services/ScheduleAvailabilityService.js";
 import { AppoitmentController } from "./controllers/AppointmentController.js";
 import { ScheduleAvailabilityController } from "./controllers/ScheduleAvailabilityController.js";
+import { TokenService } from "./services/TokenService.js";
+import { AuthController } from "./controllers/AuthController.js";
 
 export const userRepository = new PrismaUserRepository()
 export const patientRepository = new PrismaPatientRepository()
 export const appointmentRepository = new PrismaAppoitmentRepository()
 export const scheduleAvailabilityRepository = new PrismaScheduleAvailabilityRepository()
 
-export const userService = new UserService(userRepository)
+export const tokenService = new TokenService()
+export const userService = new UserService(userRepository, tokenService)
 export const patientService = new PatientService(patientRepository, userRepository, appointmentRepository)
 export const appointmentService = new AppointmentService(appointmentRepository, patientRepository)
 export const scheduleAvailabilityService = new ScheduleAvailabilityService(scheduleAvailabilityRepository,appointmentRepository,userRepository)
@@ -25,4 +28,4 @@ export const userController = new UserController(userService)
 export const patientController = new PatientController(patientService)
 export const appointmentController = new AppoitmentController(appointmentService)
 export const scheduleAvailabilityController = new ScheduleAvailabilityController(scheduleAvailabilityService)
-
+export const authController = new AuthController(userService)

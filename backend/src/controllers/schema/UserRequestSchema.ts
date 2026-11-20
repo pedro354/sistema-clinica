@@ -20,7 +20,12 @@ const UserSchema = z.object({
      email: EmailSchema,
      password: PasswordSchema,
 })
-
+const loginSchema = z.object({
+    email: EmailSchema,
+    password: PasswordSchema,
+})
 export const CreateUserSchema = UserSchema
 
 export const UpdateUserSchema = UserSchema.partial()
+
+export const LoginSchema = loginSchema

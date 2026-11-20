@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { errorHandler } from "./middlewares/errorHandler.js";
 import apiRouter from './routes/router.js';
+import authRouter from './routes/authRouter.js';
 
 const app = express()
 
@@ -13,6 +14,7 @@ app.use(cors({
 }));
 console.log("APP NOVO");
 app.use(express.json());
+app.use('/api', authRouter)
 app.use('/api', apiRouter)
 app.use(errorHandler)
 export default app;

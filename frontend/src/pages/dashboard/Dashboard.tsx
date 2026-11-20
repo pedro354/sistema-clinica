@@ -21,6 +21,24 @@ export default function Dashboard() {
   const [completedAppointments, setCompletedAppointments] = useState<Appointment[]>([]);
   const [schedule, setSchedule] = useState<ScheduleAvailability[]>([]);
 
+  const time=()=>{
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      return "Bom dia";
+    } else if (currentHour < 18) {
+      return "Boa tarde";
+    } else {
+      return "Boa noite";
+    }
+  }
+
+  const date = new Date().toLocaleDateString("pt-BR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+  
+
   const totalAvailableHours = schedule.reduce((total, schedule) => {
     const start = new Date(schedule.startDate).getTime();
     const end = new Date(schedule.endDate).getTime();
@@ -96,8 +114,8 @@ export default function Dashboard() {
     <div className="mx-auto max-w-360 px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
       <section className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
         <div>
-          <p className="text-sm font-medium text-[#7b8981]">Quarta-feira, 14 de agosto de 2026</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[#244638] sm:text-[34px]">Bom dia, { user?.name } <span aria-hidden="true">🌿</span></h1>
+          <p className="text-sm font-medium text-[#7b8981]">{date}</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[#244638] sm:text-[34px]">{time()}, { user?.name } <span aria-hidden="true">🌿</span></h1>
           <p className="mt-2 text-sm text-[#839087]">Tenha um dia tranquilo e produtivo.</p>
         </div>
         <button className="flex w-fit items-center gap-2 rounded-xl bg-[#39735b] px-4 py-3 text-sm font-semibold text-white shadow-[0_6px_14px_rgba(57,115,91,0.18)] transition-colors hover:bg-[#2e604b]">

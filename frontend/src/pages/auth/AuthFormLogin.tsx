@@ -17,24 +17,19 @@ export function AuthFormLogin({ onSwitchMode }: AuthFormLoginProps) {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const { setAuthenticatedUser } = useAuth();
-    const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-        e.preventDefault();
+const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-        const data = {
-            email,
-            password,
-        };
+    try {
+        const response = await api.login({ email, password });
 
-        try {
-            const response = await api.login(data);
-                setAuthenticatedUser(response.user);
-                        navigate("/dashboard");
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    return (
+        setAuthenticatedUser(response.user);
+        setPassword("");
+        navigate("/dashboard");
+    } catch (error) {
+        console.error("Erro ao realizar login:", error);
+    }
+};    return (
         <div className="w-full max-w-md">
             <div className="flex w-full gap-1 rounded-lg bg-slate-100 p-1 mb-6">
                 <button
@@ -73,7 +68,6 @@ export function AuthFormLogin({ onSwitchMode }: AuthFormLoginProps) {
                         name="email"
                         placeholder="Digite seu email"
                         required
-                        value={email}
                         onChange={(event) => setEmail(event.target.value)}
                         className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                     />
@@ -89,7 +83,6 @@ export function AuthFormLogin({ onSwitchMode }: AuthFormLoginProps) {
                         name="password"
                         placeholder="Digite sua senha"
                         required
-                        value={password}
                         onChange={(event) => setPassword(event.target.value)}
                         className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                     />

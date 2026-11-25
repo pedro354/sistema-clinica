@@ -12,7 +12,7 @@ export function Auth() {
 
                 <div className="relative flex w-1/2 items-center justify-center">
                     <img
-                        src="../../../design/consultorio.png"
+        src="/design/consultorio.png"
                         alt="Consultório médico"
                         className="absolute inset-0 h-full w-full object-cover"
                     />
@@ -21,7 +21,7 @@ export function Auth() {
                         <div className="flex h-full flex-col justify-center p-12 text-white">
 
                             <img
-                                src="../../../design/coracao.png"
+                src="/design/coracao.png"
                                 alt="Clinic System"
                                 width={80}
                                 className="mb-5"

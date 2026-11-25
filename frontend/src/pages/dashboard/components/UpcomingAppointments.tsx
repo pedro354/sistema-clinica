@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { type Appointment } from "../../../services/api";
+import { NavLink } from "react-router-dom";
 
 type UpcomingAppointmentProps = {
   appointments: Appointment[  ];
@@ -15,7 +16,10 @@ export function UpcomingAppointments({appointments}: UpcomingAppointmentProps){
                     <p className="text-lg font-semibold text-[#2b5141]">Próximas consultas</p>
                     <p className="mt-1 text-xs text-[#8a968f]">Sua agenda dos próximos dias</p>
                   </div>
+                  <NavLink to="/planner">
+
                   <button className="text-xs font-semibold text-[#39735b] hover:text-[#1d4f3f]">Ver agenda</button>
+                  </NavLink>
                 </div>
                 <div className="mt-5 divide-y divide-[#f0eee8]">
                   {appointments.map((appointment) => (

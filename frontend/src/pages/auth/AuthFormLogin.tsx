@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import api from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 type AuthFormLoginProps = {
     onSwitchMode: () => void;
 };
 
+
 export function AuthFormLogin({ onSwitchMode }: AuthFormLoginProps) {
+    // Permite navegar para outra rota após a autenticação.
+
+// Obtém a função responsável por atualizar o usuário autenticado.
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-const { setAuthenticatedUser } = useAuth();
+    const navigate = useNavigate();
+    const { setAuthenticatedUser } = useAuth();
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -21,6 +28,7 @@ const { setAuthenticatedUser } = useAuth();
         try {
             const response = await api.login(data);
                 setAuthenticatedUser(response.user);
+                        navigate("/dashboard");
         } catch (error) {
             console.error(error);
         }
@@ -100,6 +108,7 @@ const { setAuthenticatedUser } = useAuth();
                     type="submit"
                     className="w-full rounded-lg bg-[#17609A] py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#124C7C] active:scale-[0.99]"
                 >
+
                     Entrar
                 </button>
             </form>

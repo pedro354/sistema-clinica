@@ -21,12 +21,12 @@ export function Hero() {
 
             {/* BOTÕES */}
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <NavLink to="/dashboard">
-              <button className="cursor-pointer rounded-md bg-orange-500 px-6 py-3 text-sm text-white transition hover:bg-orange-600">
-                Começar agora
-              </button>
-              </NavLink>
-
+<NavLink
+    to="/Auth"
+    className="cursor-pointer rounded-md bg-orange-500 px-6 py-3 text-sm text-white transition hover:bg-orange-600"
+>
+    Começar agora
+</NavLink>
               <button className="cursor-pointer rounded-md border border-gray-300 px-6 py-3 text-sm text-gray-700 transition hover:bg-gray-100">
                 Ver funcionalidades
               </button>

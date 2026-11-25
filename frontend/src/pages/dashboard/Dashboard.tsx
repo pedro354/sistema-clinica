@@ -9,12 +9,15 @@ import api, { type Patient, type Appointment, type ScheduleAvailability } from "
 import { MetricCard } from "./components/MetricCard";
 import { UpcomingAppointments } from "./components/UpcomingAppointments";
 import { QuickActions } from "./components/QuickActions";
+import { useAuth } from "../../hooks/useAuth";
+import { NavLink } from "react-router-dom";
 
 
 
 
 export default function Dashboard() {
-  const [user, setUser] = useState<{ id: number, name: string } | null>(null);
+  // Recupera o usuário armazenado no contexto de autenticação.
+  const { user } = useAuth(); 
   const [patients, setPatients] = useState<Patient[]>([]);
   const [appointment, setAppointment] = useState<Appointment[]>([]);
   const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
@@ -50,11 +53,7 @@ export default function Dashboard() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const currentUser = await api.getUser(1);
-        if (currentUser) {
-          setUser(currentUser);
-        }
-        const currentPatients = await api.getPatients(1);
+        const currentPatients = await api.getPatients();
         setPatients(currentPatients);
 
         const todayStart = new Date();
@@ -118,10 +117,13 @@ export default function Dashboard() {
           <h1 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[#244638] sm:text-[34px]">{time()}, { user?.name } <span aria-hidden="true">🌿</span></h1>
           <p className="mt-2 text-sm text-[#839087]">Tenha um dia tranquilo e produtivo.</p>
         </div>
+        <NavLink  to="/appointments">
         <button className="flex w-fit items-center gap-2 rounded-xl bg-[#39735b] px-4 py-3 text-sm font-semibold text-white shadow-[0_6px_14px_rgba(57,115,91,0.18)] transition-colors hover:bg-[#2e604b]">
           <CalendarDays size={ 17 } />
           Nova consulta
         </button>
+        
+        </NavLink>
       </section>
 
       <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumo do dia">

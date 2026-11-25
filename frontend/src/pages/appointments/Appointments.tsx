@@ -30,7 +30,7 @@ async function fetchAppointments(
 
   const [appointmentData, patientData] = await Promise.all([
     api.getAppointments(1, startDate, endDate, status || undefined),
-    api.getPatients(1),
+    api.getPatients(),
   ]);
 
   return { appointmentData, patientData };

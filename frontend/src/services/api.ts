@@ -92,6 +92,10 @@ const getSession = async (): Promise<User> => {
     const response = await api.get<User>("/auth/me");
     return response.data;
 };
+
+const logout = async (): Promise<void> => {
+    await api.post("/logout");
+};
 // ==============================
 // USERS
 // ==============================
@@ -105,13 +109,8 @@ const getUser = async (id: number): Promise<User | null> => {
 // PATIENTS
 // ==============================
 
-const getPatients = async (userId: number): Promise<Patient[]> => {
-    const response = await api.get<Patient[]>("/patient", {
-        params: {
-            userId,
-        },
-    });
-
+const getPatients = async (): Promise<Patient[]> => {
+    const response = await api.get<Patient[]>("/patient");
     return response.data;
 };
 
@@ -312,6 +311,7 @@ const getPlanner = async (): Promise<void> => {
 export default {
     login,
     register,
+    logout,
     getUser,
     getPatients,
     getAppointments,

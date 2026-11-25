@@ -17,7 +17,7 @@ async function fetchPlannerData(date: Date) {
     const [appointmentData, availabilityData, patientData] = await Promise.all([
         api.getAppointments(1, startDate, endDate),
         api.getScheduleAvailability(1, startDate, endDate),
-        api.getPatients(1)
+        api.getPatients()
     ]);
     console.log("AVAILABILITY RESULT:", availabilityData);
     console.log("PLANNER REQUEST:", {
@@ -44,7 +44,7 @@ export default function Planner() {
         try {
             const { appointmentData, availabilityData } =
                 await fetchPlannerData(date);
-            const patientData = await api.getPatients(8)
+            const patientData = await api.getPatients()
 
             setPatients(patientData)
             setAppointments(appointmentData);

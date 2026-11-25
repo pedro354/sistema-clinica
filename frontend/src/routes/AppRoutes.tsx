@@ -12,7 +12,7 @@ import Settings from "../pages/settings/settings";
 import Reports from "../pages/reports/Reports";
 import Messages from "../pages/messages/Messages";
 import Planner from "../pages/planner/Planner";
-import { Auth } from "../pages/auth/auth";
+import { Auth } from "../pages/auth/Auth";
 const router = createBrowserRouter([
     {
         path: "/",

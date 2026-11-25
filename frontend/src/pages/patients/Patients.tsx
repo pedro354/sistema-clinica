@@ -12,7 +12,7 @@ export default function Patients() {
 
 const loadPatients = async () => {
   try {
-    const data = await api.getPatients(1);
+    const data = await api.getPatients();
     setPatients(data);
   } catch (error) {
     console.error("Erro ao buscar pacientes:", error);
@@ -34,7 +34,7 @@ const handleDelete = async (patient: Patient) => {
   }
 };
 useEffect(() => {
-    api.getPatients(1).then((data) => {
+    api.getPatients().then((data) => {
       setPatients(data);
     })
     .catch((error) => {

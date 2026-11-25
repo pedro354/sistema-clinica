@@ -8,37 +8,46 @@ import { PatientService } from '../services/PatientService.js';
 
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
-  index: Handler = async (req, res) => {
-      const query = getPatientsRequestSchema.parse(req.query);
-      const { sortBy, order, offset, limit } = query;
-      const result = await this.patientService.getPatientFind({
+index: Handler = async (req, res) => {
+    const query = getPatientsRequestSchema.parse(req.query);
+
+    const { sortBy, order, offset, limit } = query;
+    const userId = Number(req.user.id);
+    const result = await this.patientService.getPatientFind(userId, { 
         ...query,
+        where: {
+            userId: Number(req.user.id),
+        },
         sortBy,
         offset,
         order,
         limit,
-      });
-      return res.status(200).json(result);
-  };
-  create: Handler = async (req, res) => {
+    });
+
+    return res.status(200).json(result);
+};  create: Handler = async (req, res) => {
       const body = CreatePatientRequestSchema.parse(req.body);
-      const newPatient = await this.patientService.createPatient(body);
+        const userId = Number(req.user.id);
+      const newPatient = await this.patientService.createPatient(body, userId);
       return res.status(200).json(newPatient);
   };
   show: Handler = async (req, res) => {
       const id = +req.params.id;
-      const patient = await this.patientService.getPatientById(id);
+          const userId = Number(req.user.id);
+      const patient = await this.patientService.getPatientById(id, userId);
       return res.status(200).json(patient);
   };
   update: Handler = async (req, res) => {
       const id = +req.params.id;
+          const userId = Number(req.user.id);
       const body = updatePatientRequestSchema.parse(req.body);
-      const updatedPatient = await this.patientService.updatePatient(id, body);
+      const updatedPatient = await this.patientService.updatePatient(id, userId, body);
       return res.status(200).json(updatedPatient);
   };
   delete: Handler = async (req, res) => {
       const id = Number(req.params.id);
-      const deletePatient = await this.patientService.deletePatient(id);
+          const userId = Number(req.user.id);
+      const deletePatient = await this.patientService.deletePatient(id, userId);
       return res.json(deletePatient);
   };
 }

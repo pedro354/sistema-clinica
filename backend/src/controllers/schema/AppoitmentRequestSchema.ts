@@ -6,7 +6,6 @@ const queryIdSchema = z.coerce
 .positive("ID must be a positive integer")
 
 export const CreateAppointmentRequestSchema = z.object({
-    userId: queryIdSchema,
     patientId: queryIdSchema,
     date: z.coerce
   .date()
@@ -23,7 +22,6 @@ export const CreateAppointmentRequestSchema = z.object({
 export const UpdateAppointmentRequestSchema = CreateAppointmentRequestSchema.partial()
 
 export const GetAppointmentsRequestSchema = z.object({
-    userId: queryIdSchema.optional(),
     patientId: queryIdSchema.optional(),
     sortBy: z.enum(["date", "status"]).optional(),
     order: z.enum(["asc", "desc"]).optional(),

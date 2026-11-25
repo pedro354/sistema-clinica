@@ -1,8 +1,18 @@
 import { Router } from "express";
-import { authController } from "../containers";
 
-const authRouter = Router()
+import { authController, tokenService } from "../containers.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
-authRouter.post('/login', authController.login)
+const authRouter = Router();
 
-export default authRouter
+// Realiza a autenticação do usuário.
+authRouter.post("/login", authController.login);
+
+// Recupera a sessão do usuário autenticado.
+authRouter.get(
+    "/auth/me",
+    authMiddleware(tokenService),
+    authController.me
+);
+
+export default authRouter;

@@ -1,4 +1,3 @@
-import { UserRepository } from './../repositores/UserRepository.js';
 import {
   CreateScheduleAvailabilityAttributes,
   ScheduleAvailabilityWhereParams,
@@ -13,147 +12,193 @@ export interface GetScheduleAvailabilityParams {
   startDate: Date;
   endDate: Date;
   isAvailable?: boolean;
-  userId?: number;
 }
 
 export class ScheduleAvailabilityService {
   constructor(
     private readonly scheduleAvailabilityRepository: ScheduleAvailabilityRepository,
     private readonly appointmentRepository: AppointmentRepository,
-    private readonly userRepository: UserRepository,
   ) {}
-  async getScheduleAvailabilityFind(params: GetScheduleAvailabilityParams) {
-    const { startDate, endDate, userId, isAvailable } = params;
-    
-    const where: ScheduleAvailabilityWhereParams = {};
+async getScheduleAvailabilityFind(
+    userId: number,
+    params: GetScheduleAvailabilityParams,
+) {
+    const { startDate, endDate, isAvailable } = params;
+
+    const where: ScheduleAvailabilityWhereParams = {
+        userId,
+    };
+
     const queryStartDate = new Date(startDate);
     queryStartDate.setHours(0, 0, 0, 0);
+
     const queryEndDate = new Date(endDate);
     queryEndDate.setHours(23, 59, 59, 999);
-    where.date = { startDate: queryStartDate, endDate: queryEndDate };
+
+    where.date = {
+        startDate: queryStartDate,
+        endDate: queryEndDate,
+    };
+
     if (isAvailable !== undefined) {
-      where.isAvailable = isAvailable;
+        where.isAvailable = isAvailable;
     }
-    if (userId) where.userId = userId;
-    
-    const schedules = await this.scheduleAvailabilityRepository.find({
-      where,
-      include: { user: true },
+
+    return await this.scheduleAvailabilityRepository.find({
+        where,
     });
-    return schedules;
-  }
-  async getScheduleAvailabilityFindById(id: number) {
-    const schedules = await this.scheduleAvailabilityRepository.findById(id);
-    if (!schedules)
-      throw new NotFoundError('Schedule availability not found!');
-    return schedules;
-  }
-  async createScheduleAvailability(params: CreateScheduleAvailabilityAttributes) {
-    
-    await this.validateUser(params.userId)
-    
+}
+
+async getScheduleAvailabilityFindById(id: number, userId: number) {
+    const schedule = await this.getScheduleOrThrow(id, userId);
+    return schedule;
+}
+
+async createScheduleAvailability(
+    params: Omit<CreateScheduleAvailabilityAttributes, 'userId'>,
+    userId: number,
+) {    
     await this.validateDateRange(params.startDate, params.endDate)
 
-    await this.ensureNoDuplicated(params.startDate, params.endDate)
+    await this.ensureNoDuplicated(userId, params.startDate, params.endDate);
 
-    await this.ensureNoConflict(params.startDate, params.endDate)
+    await this.ensureNoConflict(userId, params.startDate, params.endDate);
 
-    return await this.scheduleAvailabilityRepository.create(params);
+    return await this.scheduleAvailabilityRepository.create({
+        ...params,
+        userId,
+    });
 
   }
-  async updateScheduleAvailability(id: number, attributes: Partial<CreateScheduleAvailabilityAttributes>) {
-    // A disponibilidade deve existir.
-    const currentSchedule = await this.getScheduleOrThrow(id)
-    // O novo período deve ser válido.
+async updateScheduleAvailability(
+    id: number,
+    userId: number,
+    attributes: Partial<Omit<CreateScheduleAvailabilityAttributes, 'userId'>>,
+) {
+    const currentSchedule = await this.getScheduleOrThrow(id, userId);
+
     const newStartDate = attributes.startDate ?? currentSchedule.startDate;
     const newEndDate = attributes.endDate ?? currentSchedule.endDate;
-    this.validateDateRange(newStartDate, newEndDate)
-    // Não permitir alterar uma disponibilidade caso existam e consultas agendadas no período informado.
-    await this.ensureNoAppointments(currentSchedule.userId, newStartDate, newEndDate)
-    // Não pode conflitar com outra disponibilidade.
-    const scheduleChanged = newStartDate.getTime() !== currentSchedule.startDate.getTime() || 
-       newEndDate.getTime() !== currentSchedule.endDate.getTime()
-    if(scheduleChanged){
-       const userSchedules  = await this.scheduleAvailabilityRepository.find({where: {userId: currentSchedule.userId}})
-      for (const schedule of userSchedules) {
-        if (schedule.id !== id) {
-          const beforeEnd = newStartDate < schedule.endDate;
-          const afterStart = newEndDate > schedule.startDate;
-          if (beforeEnd && afterStart) {
-            throw new ValidationError(
-              'It is not possible to change the schedule availability, as there is a conflict with another availability.',
-            );
-          }
-        }
 
-      }
-    }
-    return this.scheduleAvailabilityRepository.update(id, attributes);
-  }
-    async deleteSchedule(id: number) {
-    
-    const schedule = await this.getScheduleOrThrow(id)
+    this.validateDateRange(newStartDate, newEndDate);
+
+    await this.ensureNoAppointments(userId, newStartDate, newEndDate);
+
+    const scheduleChanged =
+        newStartDate.getTime() !== currentSchedule.startDate.getTime() ||
+        newEndDate.getTime() !== currentSchedule.endDate.getTime();
+
+if (scheduleChanged) {
+    await this.ensureNoAppointments(
+        userId,
+        newStartDate,
+        newEndDate,
+    );
+
+    await this.ensureNoConflict(
+        userId,
+        newStartDate,
+        newEndDate,
+        id,
+    );
+}
+    return await this.scheduleAvailabilityRepository.update(id, attributes);
+}
+
+async deleteSchedule(id: number, userId: number) {
+    const schedule = await this.getScheduleOrThrow(id, userId);
 
     return await this.scheduleAvailabilityRepository.delete(schedule.id);
-  }
+}
 
+private validateDateRange(startDate: Date, endDate: Date) {
+    if (!startDate || !endDate) {
+        throw new ValidationError('Start date and end date are required.');
+    }
 
-  private async validateUser(userId: number){
-    const user = await this.userRepository.findById(userId);
-    if (!user) throw new NotFoundError('Associated user not found!');
-  }
-  private async validateDateRange(startDate: Date, endDate: Date){
-    if (!startDate) throw new NotFoundError('Mandatory start date');
-    if (!endDate) throw new NotFoundError('Mandatory end date');
-
-    if (startDate > endDate)
-      throw new NotFoundError('The start date cannot be later than the end date.');
-  }
-  private async ensureNoDuplicated(startDate: Date, endDate: Date){
+    if (startDate > endDate) {
+        throw new ValidationError(
+            'The start date cannot be later than the end date.',
+        );
+    }
+}
+private async ensureNoDuplicated(
+    userId: number,
+    startDate: Date,
+    endDate: Date,
+) {
     const duplicated = await this.scheduleAvailabilityRepository.find({
-      where: {
-        date: {
-          startDate: startDate,
-          endDate: endDate,
+        where: {
+            userId,
+            date: {
+                startDate,
+                endDate,
+            },
         },
-      },
     });
-    if (duplicated.length > 0) throw new ConflictError('Cannot be duplicated');
 
-  }
-  private async ensureNoConflict(startDate: Date, endDate: Date){
-    const schedules = await this.scheduleAvailabilityRepository.find({});
-    const conflicts = schedules.filter((sched) => {
-      const avaliacaoantesdofim = startDate < sched.endDate;
-      const avaliacaodepoisdoinicio = endDate > sched.startDate;
-      return avaliacaoantesdofim && avaliacaodepoisdoinicio;
+    if (duplicated.length > 0) {
+        throw new ConflictError('Cannot be duplicated');
+    }
+}
+
+private async ensureNoConflict(
+    userId: number,
+    startDate: Date,
+    endDate: Date,
+    excludeScheduleId?: number,
+) {
+    const schedules = await this.scheduleAvailabilityRepository.find({
+        where: { userId },
+    });
+
+    const conflicts = schedules.filter((schedule) => {
+        if (schedule.id === excludeScheduleId) {
+            return false;
+        }
+
+        const beforeEnd = startDate < schedule.endDate;
+        const afterStart = endDate > schedule.startDate;
+
+        return beforeEnd && afterStart;
     });
 
     if (conflicts.length > 0) {
-      throw new ConflictError(
-        'There can be no scheduling conflicts with other availability.',
-      );
+        throw new ConflictError(
+            'There can be no scheduling conflicts with other availability.',
+        );
     }
-  }
-  private async getScheduleOrThrow(id: number){
-    const schedule  = await this.scheduleAvailabilityRepository.findById(id);
-    if (!schedule ) throw new NotFoundError('Schedule availability not found!');
-    return schedule
-  }
-  private async ensureNoAppointments(userId: number, startDate: Date, endDate: Date){
-    const appointments = await this.appointmentRepository.find({
-      where: {
-        userId: userId,
-        date: {
-          startDate: startDate,
-          endDate: endDate,
-        },
-      },
-    });
-    if (appointments.length > 0)
-      throw new NotFoundError(
-        'It is not possible to change the schedule availability, as there are appointments booked during that time.',
-      );
-  }
+}
 
+private async getScheduleOrThrow(id: number, userId: number) {
+    const schedule = await this.scheduleAvailabilityRepository.findById(id);
+
+    if (!schedule || schedule.userId !== userId) {
+        throw new NotFoundError('Schedule availability not found!');
+    }
+
+    return schedule;
+}
+
+private async ensureNoAppointments(
+    userId: number,
+    startDate: Date,
+    endDate: Date,
+) {
+    const appointments = await this.appointmentRepository.find({
+        where: {
+            userId,
+            date: {
+                startDate,
+                endDate,
+            },
+        },
+    });
+
+    if (appointments.length > 0) {
+        throw new ConflictError(
+            'It is not possible to change the schedule availability, as there are appointments booked during that time.',
+        );
+    }
+}
 }

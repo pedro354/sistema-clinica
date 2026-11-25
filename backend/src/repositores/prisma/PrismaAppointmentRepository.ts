@@ -9,6 +9,10 @@ import {
 export class PrismaAppoitmentRepository implements AppointmentRepository {
   async find(params: FindAppointmentsParams): Promise<Appointment[]> {
     const where: Prisma.AppointmentWhereInput = {};
+    // Filtra os agendamentos pelo usuário autenticado
+if (params.where?.userId !== undefined) {
+    where.userId = params.where.userId;
+}
 
     if (params.where?.date) {
       where.date = {

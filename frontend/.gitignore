@@ -33,4 +33,6 @@ test
 .refact/
 
 .env
+.env.*
+!.env.example
 .env.production

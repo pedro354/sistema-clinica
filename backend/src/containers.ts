@@ -18,14 +18,18 @@ export const patientRepository = new PrismaPatientRepository()
 export const appointmentRepository = new PrismaAppoitmentRepository()
 export const scheduleAvailabilityRepository = new PrismaScheduleAvailabilityRepository()
 
+// Serviço responsável pela geração e validação dos tokens.
 export const tokenService = new TokenService()
+
 export const userService = new UserService(userRepository, tokenService)
 export const patientService = new PatientService(patientRepository, userRepository, appointmentRepository)
-export const appointmentService = new AppointmentService(appointmentRepository, patientRepository)
-export const scheduleAvailabilityService = new ScheduleAvailabilityService(scheduleAvailabilityRepository,appointmentRepository,userRepository)
+export const appointmentService = new AppointmentService(appointmentRepository, patientRepository, scheduleAvailabilityRepository)
+export const scheduleAvailabilityService = new ScheduleAvailabilityService(scheduleAvailabilityRepository,appointmentRepository)
 
 export const userController = new UserController(userService)
 export const patientController = new PatientController(patientService)
 export const appointmentController = new AppoitmentController(appointmentService)
 export const scheduleAvailabilityController = new ScheduleAvailabilityController(scheduleAvailabilityService)
+
+// Controller responsável pelas operações de autenticação.
 export const authController = new AuthController(userService)

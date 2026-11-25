@@ -1,12 +1,18 @@
 import { Router } from 'express'
-import { appointmentController, patientController, scheduleAvailabilityController, userController } from '../containers.js';
+import { appointmentController, patientController, scheduleAvailabilityController, tokenService, userController } from '../containers.js';
 
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
+// Cadastro de usuários permanece público.
+router.post("/user", userController.create);
+
+// Todas as rotas registradas abaixo exigem autenticação.
+router.use(authMiddleware(tokenService));
+
 
 router.get('/user', userController.index)
-router.post('/user', userController.create)
 router.get('/user/:id', userController.show)
 router.put('/user/:id', userController.update)
 

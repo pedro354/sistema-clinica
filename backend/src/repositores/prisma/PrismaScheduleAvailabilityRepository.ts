@@ -21,8 +21,6 @@ export class PrismaScheduleAvailabilityRepository implements ScheduleAvailabilit
             where.isAvailable = params.where?.isAvailable
         }
 
-        console.log("DATE FILTER:", params.where?.date);
-        console.log("PRISMA WHERE:", where);
         return prisma.scheduleAvailability.findMany({
             where,
             include: {
@@ -41,12 +39,15 @@ export class PrismaScheduleAvailabilityRepository implements ScheduleAvailabilit
     async create(attributes: CreateScheduleAvailabilityAttributes): Promise <ScheduleAvailability> {
         return prisma.scheduleAvailability.create({data: attributes})
     }
-   async update(id: number, attributes: Partial<CreateScheduleAvailabilityAttributes>): Promise<ScheduleAvailability>{
+async update(
+    id: number,
+    attributes: Partial<Omit<CreateScheduleAvailabilityAttributes, 'userId'>>
+): Promise<ScheduleAvailability> {
     return prisma.scheduleAvailability.update({
-        where: {id},
+        where: { id },
         data: attributes
-    })
-   }
+    });
+}
        async delete(id: number): Promise<ScheduleAvailability>{
         return prisma.scheduleAvailability.delete({where: { id }})
     }

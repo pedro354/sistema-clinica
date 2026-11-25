@@ -15,78 +15,117 @@ export class PatientService {
     private readonly userRepository: UserRepository,
     private readonly appointmentRepository: AppointmentRepository,
   ) {}
-  async getPatientFind(params: FindPatientsParams) {
-    const patients = await this.patientRepository.find({
-      where: params.where,
-      sortBy: params.sortBy,
-      order: params.order,
-      offset: params.offset,
-      limit: params.limit,
+
+  // Lista somente os pacientes pertencentes ao usuário autenticado.
+  async getPatientFind(userId: number, params: FindPatientsParams) {
+    await this.validateUser(userId);
+
+    return this.patientRepository.find({
+      ...params,
+      where: {
+        ...params.where,
+        userId,
+      },
       include: { appointments: true, user: true },
     });
-    return patients;
   }
 
-  async getPatientById(id: number) {
-    await this.getPatientOrThrow(id)
+  // Busca um paciente verificando sua propriedade.
+  async getPatientById(id: number, userId: number) {
+    return this.getPatientOrThrow(id, userId);
   }
-  async createPatient(params: CreatePatientAttributes) {
 
+  // Cria um paciente associado ao usuário autenticado.
+  async createPatient(
+    params: Omit<CreatePatientAttributes, 'userId'>,
+    userId: number,
+  ) {
     this.validateName(params.name);
-    
-    await this.validateUser(params.userId);
+    this.validatePhone(params.phone);
 
-    this.validatePhone(params.phone)
+    await this.validateUser(userId);
 
-    return this.patientRepository.create(params);
+    return this.patientRepository.create({
+      ...params,
+      userId,
+    });
   }
-  async updatePatient(id: number, params: Partial<CreatePatientAttributes>) {
 
-    const currentPatient = await this.getPatientOrThrow(id)
-
-    if (params.userId) {
-      await this.validateUser(params.userId)
-    }
+  // Atualiza somente pacientes pertencentes ao usuário autenticado.
+  async updatePatient(
+    id: number,
+    userId: number,
+    params: Partial<Omit<CreatePatientAttributes, 'userId'>>,
+  ) {
+    const currentPatient = await this.getPatientOrThrow(id, userId);
 
     if (params.name !== undefined) {
-      await this.validateName(params.name)
+      this.validateName(params.name);
     }
 
     if (params.phone !== undefined) {
-      await this.validatePhone(params.phone)
+      this.validatePhone(params.phone);
     }
+
     return this.patientRepository.update(currentPatient.id, params);
   }
-  async deletePatient(id: number) {
-    
-    const patient = await this.getPatientOrThrow(id)
 
+  // Exclui somente pacientes pertencentes ao usuário autenticado.
+  async deletePatient(id: number, userId: number) {
+    const patient = await this.getPatientOrThrow(id, userId);
 
-    const appointment = await this.appointmentRepository.find({ where: { patientId: id } });
+    const appointments = await this.appointmentRepository.find({
+      where: {
+        patientId: id,
+        userId,
+      },
+    });
 
-    if (appointment.length > 0)
-      throw new Error('It is not possible to delete a patient with appointments.');
+    if (appointments.length > 0) {
+      throw new ValidationError(
+        'It is not possible to delete a patient with appointments.',
+      );
+    }
 
-    return await this.patientRepository.delete(patient.id);
+    return this.patientRepository.delete(patient.id);
   }
 
-  private async getPatientOrThrow(id: number){
+  // Confere se o paciente existe e pertence ao usuário.
+  private async getPatientOrThrow(id: number, userId: number) {
     const patient = await this.patientRepository.findById(id);
-    if (!patient) throw new ValidationError('Pacient not found!');
+
+    if (!patient || patient.userId !== userId) {
+      throw new ValidationError('Patient not found!');
+    }
+
     return patient;
   }
-  private async validateName(name: string){
-    if (!name?.trim()) throw new ValidationError('Name is required');
-  }
-  private async validateUser(userId: number){
-    const user = await this.userRepository.findById(userId);
-    if (!user) throw new ValidationError('User not found! ');
-    return user
-  }
-  private async validatePhone(phone:string){
-    if (!phone?.trim()) throw new Error('Phone is required');
-    if (!PHONE_REGEX.test(phone))
-      throw new NotFoundError('Invalid phone number. Use the format (00) 99999-9999.');
+
+  private validateName(name: string) {
+    if (!name?.trim()) {
+      throw new ValidationError('Name is required');
+    }
   }
 
+  private async validateUser(userId: number) {
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new ValidationError('User not found!');
+    }
+
+    return user;
+  }
+
+  private validatePhone(phone: string) {
+    if (!phone?.trim()) {
+      throw new ValidationError('Phone is required');
+    }
+
+    if (!PHONE_REGEX.test(phone)) {
+      throw new NotFoundError(
+        'Invalid phone number. Use the format (00) 99999-9999.',
+      );
+    }
+  }
 }

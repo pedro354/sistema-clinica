@@ -5,14 +5,11 @@ export function authMiddleware(tokenService: TokenService) {
     return (req: Request, res: Response, next: NextFunction) => {
         // Recupera o cookie enviado pelo navegador.
         const cookie = req.headers.cookie;
-        console.log("COOKIE RECEBIDO:", req.headers.cookie);
         if (!cookie) {
             return res.status(401).json({
                 message: "Authentication required"
             });
         }
-        
-        console.log("HEADERS:", req.headers);
         // Localiza o cookie de autenticação.
         const authCookie = cookie
             .split(";")
